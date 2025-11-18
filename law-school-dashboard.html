@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>U.S. Law School Research Dashboard - Summer Program Focus</title>
+    <title>U.S. Law School Research Dashboard - Comparative Analysis</title>
     <style>
         /* --- General and Layout Styles (Copied from original) --- */
         * {
@@ -219,6 +219,7 @@
         /* --- New/Adapted Table and Grid Styles --- */
         .data-table-container {
             overflow-x: auto;
+            margin-bottom: 30px; /* Added spacing below the T14 table */
         }
 
         .data-table {
@@ -242,7 +243,18 @@
             border-bottom: 3px solid #330662;
             position: sticky;
             top: 0;
+            white-space: nowrap;
         }
+        
+        .data-table .year-header {
+            background: #00abce;
+            border-bottom: 3px solid #007a93;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            padding: 5px;
+        }
+
 
         .data-table tr:nth-child(even) {
             background-color: #f9f9f9;
@@ -252,10 +264,9 @@
             background-color: #e8f4f8;
         }
 
-        .data-table .rank {
+        .data-table .school-name {
             font-weight: bold;
-            color: #00abce;
-            text-align: center;
+            color: #330662;
         }
 
         .data-table .yes-cell {
@@ -354,6 +365,25 @@
             color: #925333;
         }
 
+        /* New List Styling */
+        .school-list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .school-list-grid li {
+            font-size: 15px;
+            color: #330662;
+            font-weight: 500;
+            list-style: disc;
+            list-style-position: inside;
+        }
+
 
         .footer-note {
             margin-top: 40px;
@@ -370,12 +400,12 @@
     <div class="container">
         <div class="header">
             <h1>Accredited U.S. Law Schools Research</h1>
-            <p>Analysis of Summer 2025 Programming and Rankings</p>
+            <p>Analysis of Programmatic Offerings and Rankings</p>
         </div>
 
         <div class="view-controls">
             <div class="view-header active" onclick="showView('summary')">Executive Summary</div>
-            <div class="view-header" onclick="showView('t14')">Tier 14 Analysis</div>
+            <div class="view-header" onclick="showView('t14')">Tiered Short List</div>
             <div class="view-header" onclick="showView('tiered')">Tiered Breakdown</div>
             <div class="view-header" onclick="showView('programs')">Summer Program Focus</div>
         </div>
@@ -395,16 +425,16 @@
                             <div class="metric-label">T14 SCHOOLS ANALYZED</div>
                         </div>
                         <div class="metric">
-                            <div class="metric-value">75</div>
-                            <div class="metric-label">TOTAL SCHOOLS IN TIERED ANALYSIS</div>
+                            <div class="metric-value">25</div>
+                            <div class="metric-label">TOTAL SCHOOLS IN TIERED ANALYSIS (Corrected)</div>
                         </div>
                         <div class="metric">
                             <div class="metric-value">8</div>
-                            <div class="metric-label">T14 WITH CONFIRMED SUMMER PROGRAM</div>
+                            <div class="metric-label">T14 W/ INSTITUTIONAL COMMITMENT (2025)</div>
                         </div>
                         <div class="metric">
-                            <div class="metric-value">40%</div>
-                            <div class="metric-label">PERCENTAGE OF T1 SCHOOLS W/ PROGRAM</div>
+                            <div class="metric-value">12</div>
+                            <div class="metric-label">T14 W/ CLINICS (2025)</div>
                         </div>
                     </div>
 
@@ -426,149 +456,194 @@
             </div>
 
             <div id="t14-view" class="view-panel">
+                <h2>Tiered Short List: T14 Programmatic Analysis (2025 vs. 2022)</h2>
+                <p style="margin-bottom: 15px; font-style: italic; color: #666;">Data reflects the presence (X) or absence (-) of Clinics, Centers, and Courses in key areas of focus. The analysis uses the historically stable T14 cohort for consistent comparison.</p>
                 <div class="data-table-container">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>USN Rank</th>
-                                <th>School Name</th>
-                                <th>Confirmed Summer Program</th>
-                                <th>Potential Summer Program</th>
-                                <th>Summer Program Focus/Notes</th>
-                                <th>Tier</th>
-                                <th>Notes</th>
+                                <th rowspan="2" style="width: 150px;">School</th>
+                                <th colspan="4" class="year-header">2025 Findings</th>
+                                <th colspan="3" class="year-header">2022 Findings</th>
+                            </tr>
+                            <tr>
+                                <th>Clinics</th>
+                                <th>Centers</th>
+                                <th>Courses</th>
+                                <th>Institutional Commitment</th>
+                                <th>Clinics</th>
+                                <th>Centers</th>
+                                <th>Courses</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="rank">1</td>
-                                <td>Yale Law School</td>
-                                <td class="yes-cell">Yes</td>
-                                <td class="no-cell">No</td>
-                                <td>Global Public Interest Fellowship</td>
-                                <td>T1</td>
-                                <td>Strong international focus.</td>
+                                <td class="school-name">Yale</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="rank">2</td>
-                                <td>Stanford Law School</td>
-                                <td class="yes-cell">Yes</td>
-                                <td class="no-cell">No</td>
-                                <td>Public Interest Summer Fellowship</td>
-                                <td>T1</td>
-                                <td>Well-established program.</td>
+                                <td class="school-name">Stanford</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
                             </tr>
                             <tr>
-                                <td class="rank">3</td>
-                                <td>Harvard Law School</td>
-                                <td class="yes-cell">Yes</td>
-                                <td class="no-cell">No</td>
-                                <td>Summer Public Interest Funding Program</td>
-                                <td>T1</td>
-                                <td>Large scale funding and placement.</td>
+                                <td class="school-name">Harvard</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="rank">4</td>
-                                <td>University of Chicago Law School</td>
-                                <td class="no-cell">No</td>
-                                <td class="no-cell">No</td>
-                                <td>No general program found.</td>
-                                <td>T1</td>
-                                <td></td>
+                                <td class="school-name">Columbia</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="rank">5</td>
-                                <td>Columbia Law School</td>
-                                <td class="yes-cell">Yes</td>
-                                <td class="no-cell">No</td>
-                                <td>Human Rights/Global Summer Programs</td>
-                                <td>T1</td>
-                                <td></td>
+                                <td class="school-name">Chicago</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
                             </tr>
                             <tr>
-                                <td class="rank">5</td>
-                                <td>New York University School of Law</td>
-                                <td class="yes-cell">Yes</td>
-                                <td class="no-cell">No</td>
-                                <td>International Law & Development Programs</td>
-                                <td>T1</td>
-                                <td></td>
+                                <td class="school-name">NYU</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
                             </tr>
                             <tr>
-                                <td class="rank">7</td>
-                                <td>University of Pennsylvania Law School</td>
-                                <td class="yes-cell">Yes</td>
-                                <td class="no-cell">No</td>
-                                <td>Future of the Corporation Summer Program</td>
-                                <td>T1</td>
-                                <td>Focus on corporate social impact.</td>
+                                <td class="school-name">U Pennsylvania</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="rank">8</td>
-                                <td>University of Virginia School of Law</td>
-                                <td class="no-cell">No</td>
-                                <td class="no-cell">No</td>
-                                <td>No general program found.</td>
-                                <td>T1</td>
-                                <td></td>
+                                <td class="school-name">U Virginia</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="rank">9</td>
-                                <td>Northwestern University Pritzker School of Law</td>
-                                <td class="no-cell">No</td>
-                                <td class="no-cell">No</td>
-                                <td>Limited summer research opportunities.</td>
-                                <td>T1</td>
-                                <td></td>
+                                <td class="school-name">UC Berkeley</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
                             </tr>
                             <tr>
-                                <td class="rank">10</td>
-                                <td>University of California, Berkeley School of Law</td>
-                                <td class="yes-cell">Yes</td>
-                                <td class="no-cell">No</td>
-                                <td>Environmental Law Summer Program</td>
-                                <td>T1</td>
-                                <td>Strong focus on sustainability law.</td>
+                                <td class="school-name">Duke</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
                             </tr>
                             <tr>
-                                <td class="rank">10</td>
-                                <td>Duke University School of Law</td>
-                                <td class="no-cell">No</td>
-                                <td class="no-cell">No</td>
-                                <td>Focus on global law internships.</td>
-                                <td>T1</td>
-                                <td></td>
+                                <td class="school-name">Michigan</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="rank">12</td>
-                                <td>University of Michigan Law School</td>
-                                <td class="no-cell">No</td>
-                                <td class="yes-cell">Yes</td>
-                                <td>Potential for renewed International Summer School</td>
-                                <td>T1</td>
-                                <td>Currently Pending.</td>
+                                <td class="school-name">Northwestern</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
                             </tr>
                             <tr>
-                                <td class="rank">13</td>
-                                <td>Cornell Law School</td>
-                                <td class="yes-cell">Yes</td>
-                                <td class="no-cell">No</td>
-                                <td>Summer Research Fellowship Program</td>
-                                <td>T1</td>
-                                <td>Focus on faculty research support.</td>
+                                <td class="school-name">Cornell</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="rank">14</td>
-                                <td>Georgetown University Law Center</td>
-                                <td class="no-cell">No</td>
-                                <td class="yes-cell">Yes</td>
-                                <td>Possible summer certificate program expansion.</td>
-                                <td>T1</td>
-                                <td>Currently Pending.</td>
+                                <td class="school-name">Georgetown</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+
+                <h2 style="margin-top: 40px; border-bottom: 2px solid #702b9d; padding-bottom: 10px; color: #330662;">Schools in Short List Consideration</h2>
+                <p style="margin-bottom: 20px; font-style: italic; color: #666;">This list represents a selection of schools, including T14 and non-T14 institutions, under active review.</p>
+                
+                <ul class="school-list-grid">
+                    <li>Boston College Law School</li>
+                    <li>Brooklyn Law School</li>
+                    <li>Columbia Law School</li>
+                    <li>Georgetown University Law Center</li>
+                    <li>New York University School of Law</li>
+                    <li>Northeastern University School of Law</li>
+                    <li>Northwestern Pritzker School of Law</li>
+                    <li>Pace University--Elisabeth Haub School of Law</li>
+                    <li>Pepperdine Caruso School of Law</li>
+                    <li>UC Berkeley Law</li>
+                    <li>University of California at Los Angeles (UCLA) School of Law</li>
+                    <li>University of Michigan School of Law</li>
+                    <li>University of Missouri--Kansas City School of Law</li>
+                    <li>University of Virginia School of Law</li>
+                    <li>University of Washington School of Law</li>
+                    <li>West Virginia University College of Law</li>
+                    <li>Yale Law School</li>
+                </ul>
+
             </div>
 
             <div id="tiered-view" class="view-panel">
@@ -648,36 +723,36 @@
                                 <td>Boston University School of Law</td>
                                 <td class="rank">27</td>
                                 <td>T2</td>
-                                <td class="yes-cell">Yes</td>
-                                <td class="no-cell">No</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
                             </tr>
                             <tr>
                                 <td>George Washington University Law School</td>
                                 <td class="rank">32</td>
                                 <td>T2</td>
-                                <td class="no-cell">No</td>
-                                <td class="yes-cell">Yes</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
                             </tr>
                             <tr>
                                 <td>Tulane University Law School</td>
                                 <td class="rank">57</td>
                                 <td>T3</td>
-                                <td class="yes-cell">Yes</td>
-                                <td class="no-cell">No</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
                             </tr>
                             <tr>
                                 <td>Villanova University Charles Widger School of Law</td>
                                 <td class="rank">67</td>
                                 <td>T3</td>
-                                <td class="no-cell">No</td>
-                                <td class="no-cell">No</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
                             </tr>
                             <tr>
                                 <td>University of Baltimore School of Law</td>
                                 <td class="rank">125</td>
                                 <td>T4</td>
-                                <td class="yes-cell">Yes</td>
-                                <td class="no-cell">No</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
                             </tr>
                         </tbody>
                     </table>
