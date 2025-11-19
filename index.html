@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U.S. Law School Research Dashboard - Comparative Analysis</title>
+    <style>
+        /* --- General and Layout Styles (Copied from original) --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #00abce;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #330662;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #330662;
+            font-size: 20px;
+            font-weight: normal;
+        }
+
+        .view-controls {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .view-header {
+            color: #999;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-header:hover:not(.active) {
+            color: #666;
+        }
+
+        .view-header.active {
+            color: #330662;
+            font-size: 22px;
+            font-weight: 700;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #702b9d;
+            cursor: default;
+        }
+
+        .view-header:not(.active)::after {
+            content: '|';
+            position: absolute;
+            right: -13px;
+            color: #ddd;
+        }
+
+        .view-header:last-child::after {
+            display: none;
+        }
+
+        .metrics-bar {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f9f9f9 0%, #e8f4f8 100%);
+            border-radius: 8px;
+            flex-wrap: wrap;
+            gap: 20px;
+            border: 1px solid #00abce;
+        }
+
+        .metric {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #330662;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .view-container {
+            min-height: 500px;
+        }
+
+        .view-panel {
+            display: none;
+        }
+
+        .view-panel.active {
+            display: block;
+        }
+
+        /* --- Executive Summary Styles --- */
+        .executive-summary {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .summary-intro {
+            background: linear-gradient(135deg, #330662 0%, #702b9d 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .summary-intro h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .summary-intro p {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.95;
+            margin-bottom: 15px;
+        }
+
+        .summary-intro p:last-child {
+            margin-bottom: 0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .summary-card:hover {
+            border-color: #00abce;
+            box-shadow: 0 4px 12px rgba(0,171,206,0.15);
+        }
+
+        .summary-card h3 {
+            color: #330662;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary-card .icon {
+            width: 30px;
+            height: 30px;
+            background: #00abce;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .summary-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* --- New/Adapted Table and Grid Styles --- */
+        .data-table-container {
+            overflow-x: auto;
+            margin-bottom: 30px; 
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 10px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table th {
+            background: #702b9d;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            border-bottom: 3px solid #330662;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+            vertical-align: top; 
+        }
+        
+        .data-table .year-header {
+            background: #00abce;
+            border-bottom: 3px solid #007a93;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            padding: 5px;
+        }
+
+        /* Styling for the new Commitment Subdivisions */
+        .data-table .commitment-header th {
+            background: #330662;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 8px 15px;
+            border-top: 4px solid #00abce;
+            border-bottom: 2px solid white;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Ensure rows following a header are white to distinguish the group start */
+        .data-table tr.commitment-header + tr {
+            background-color: white !important;
+        }
+
+        .data-table tr:hover {
+            background-color: #e8f4f8;
+        }
+
+        .data-table .school-name {
+            font-weight: bold;
+            color: #330662;
+        }
+
+        .data-table .yes-cell {
+            color: #73a535;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .data-table .no-cell {
+            color: #cc3300;
+            text-align: center;
+        }
+        
+        /* Tiered Breakdown Grid */
+        .tier-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .tier-card {
+            border: 1px solid #00abce;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .tier-header {
+            background: #00abce;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .tier-stats {
+            padding: 15px;
+            background: #f4fcff;
+        }
+        
+        .tier-stats p {
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #330662;
+        }
+
+        .tier-stats strong {
+            font-weight: 700;
+            color: #702b9d;
+        }
+
+        /* Summer Program Focus (List style) */
+        .program-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .program-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+
+        .program-item:last-child {
+            border-bottom: none;
+        }
+
+        .school-name {
+            flex: 1;
+            font-weight: 600;
+            color: #330662;
+            font-size: 16px;
+        }
+
+        .program-details {
+            flex: 2;
+            font-size: 14px;
+            color: #666;
+            margin-left: 20px;
+        }
+        
+        .program-status {
+            font-weight: bold;
+            color: #73a535;
+            flex-basis: 150px;
+            text-align: right;
+        }
+        
+        .program-status.none {
+            color: #cc3300;
+        }
+        
+        .program-status.pending {
+            color: #925333;
+        }
+
+        /* New List Styling */
+        .school-list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .school-list-grid li {
+            font-size: 15px;
+            color: #330662;
+            font-weight: 500;
+            list-style: disc;
+            list-style-position: inside;
+        }
+
+
+        .footer-note {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body onload="showView('summary')">
+    <div class="container">
+        <div class="header">
+            <h1>Accredited U.S. Law Schools Research</h1>
+            <p>Analysis of Programmatic Offerings and Rankings</p>
+        </div>
+
+        <div class="view-controls">
+            <div class="view-header active" onclick="showView('summary')">Executive Summary</div>
+            <div class="view-header" onclick="showView('t14')">Tiered Short List</div>
+            <div class="view-header" onclick="showView('tiered')">Tiered Breakdown</div>
+            <div class="view-header" onclick="showView('programs')">Summer Program Focus</div>
+        </div>
+
+        <div class="view-container">
+            <div id="summary-view" class="view-panel">
+                <div class="executive-summary">
+                    <div class="summary-intro">
+                        <h2>Research Overview: U.S. Law School Landscape</h2>
+                        <p>This dashboard presents research compiled on U.S. Law Schools, focusing on their ranking, tier status, and confirmed/potential summer 2025 programming relevant to specific legal fields. The data combines information on top-tier schools with a broader tiered breakdown.</p>
+                        <p>Key findings suggest a strong concentration of relevant summer programs and high-ranking status among the T14 schools, though significant program activity is also noted across all tiers. This analysis supports strategic planning for student outreach, academic collaborations, and program development.</p>
+                    </div>
+
+                    <div class="metrics-bar">
+                        <div class="metric">
+                            <div class="metric-value">17</div>
+                            <div class="metric-label">TOTAL SCHOOLS IN SHORTLIST (Revised)</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">9</div>
+                            <div class="metric-label">SCHOOLS WITH STRONG COMMITMENT</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">3</div>
+                            <div class="metric-label">SCHOOLS WITH SUBSTANTIAL COMMITMENT</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">5</div>
+                            <div class="metric-label">SCHOOLS WITH SOME COMMITMENT</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <h3><span class="icon">📈</span> T14 Concentration</h3>
+                            <p>T14 schools show high engagement with specific summer programming, suggesting they are critical partners for high-level legal research and student recruitment.</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3><span class="icon">🗺️</span> Geographic Spread</h3>
+                            <p>The Tiered Breakdown shows program presence across all four tiers, confirming broad national reach for program development and information dissemination.</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3><span class="icon">💡</span> Next Steps</h3>
+                            <p>Further research is recommended on the nature of the "potential" summer programs to assess feasibility and alignment with strategic goals.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="t14-view" class="view-panel">
+                <h2>Tiered Shortlist: Institutional Commitment and Programmatic Offerings</h2>
+                
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 250px;">School</th>
+                                <th>Centers or Institutes</th>
+                                <th>Clinics</th>
+                                <th>Courses</th>
+                                <th>Events</th>
+                                <th>Legal Case Studies</th>
+                                <th>CLE</th>
+                                <th>Reports</th>
+                                <th>Extracurriculars</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="school-name">New York University School of Law</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            
+                            <tr class="commitment-header">
+                                <th colspan="9">Strong Institutional Commitment*</th>
+                            </tr>
+                            <tr>
+                                <td class="school-name">Yale Law School</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">Columbia Law School</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">Georgetown University Law Center</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">Northwestern Pritzker School of Law</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">UC Berkeley Law</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">University of California at Los Angeles (UCLA) School of Law</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">University of Michigan School of Law</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">University of Virginia School of Law</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+
+                            <tr class="commitment-header">
+                                <th colspan="9">Substantial Institutional Commitment**</th>
+                            </tr>
+                            <tr>
+                                <td class="school-name">Boston College Law School</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">University of Missouri--Kansas City School of Law</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">University of Washington School of Law</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+
+                            <tr class="commitment-header">
+                                <th colspan="9">Some Institutional Commitment***</th>
+                            </tr>
+                            <tr>
+                                <td class="school-name">Brooklyn Law School</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">Northeastern University School of Law</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">Pace University--Elisabeth Haub School of Law</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">Pepperdine Caruso School of Law</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name">West Virginia University College of Law</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2 style="margin-top: 40px; border-bottom: 2px solid #702b9d; padding-bottom: 10px; color: #330662;">Tier Criteria</h2>
+                
+                <div class="tier-criteria-container" style="margin-top: 20px; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+                    <h3 style="color: #330662; margin-bottom: 5px; border-left: 3px solid #702b9d; padding-left: 10px;">Strong Institutional Commitment*</h3>
+                    <p style="margin-bottom: 15px; color: #666; font-size: 15px;">Schools in this category demonstrate a high level of institutional commitment to social entrepreneurship, impact investing, and/or sustainable development. This commitment is demonstrated through a dedicated, formal center or institute (or a similarly structured program) that acts as a singular organizing hub for the school's relevant offerings. This center coordinates a comprehensive suite of programming, including clinics, courses, student groups, and recurring events/symposia. This structure often involves cross-campus collaboration (e.g., with a business school) and includes the visible support of institutional leadership (e.g., a dean or associate dean).</p>
+
+                    <h3 style="color: #330662; margin-bottom: 5px; border-left: 3px solid #702b9d; padding-left: 10px;">Substantial Institutional Commitment**</h3>
+                    <p style="margin-bottom: 15px; color: #666; font-size: 15px;">Schools in this category demonstrate a clear focus on social entrepreneurship, impact investing, and/or sustainable development through specific programming, although they may lack the comprehensive institutional commitment of a school with “strong institutional commitment.” Their engagement is typically part of a broader, more general program (e.g., a general entrepreneurship center) and/or lacks a dedicated institutional commitment. This is typically evidenced by a general entrepreneurship clinic that has worked with social enterprises but does not state it as a core mission, or a business law course with a single related component or module. The institutional commitment to these areas is less clear and not a central priority.</p>
+
+                    <h3 style="color: #330662; margin-bottom: 5px; border-left: 3px solid #702b9d; padding-left: 10px;">Some Institutional Commitment***</h3>
+                    <p style="margin-bottom: 0px; color: #666; font-size: 15px;">Schools in this category offer programming relevant to social entrepreneurship, impact investing, and/or sustainable development, but this is a secondary focus. Their engagement is typically part of a broader, more general program (e.g., programming that is more generally concerned with entrepreneurship, sustainability, community/international development) and lacks explicit keyword focus in the program's current mission or name. This can be seen in a general entrepreneurship clinic that has worked with social enterprises but does not state it as a core mission, or a business law course with a related component. The institutional commitment to this area is less clear.</p>
+                </div>
+                <p style="margin-top: 20px; font-size: 12px; color: #666; font-style: italic; text-align: right; padding-right: 10px;">
+                    */**/*** These commitment levels are defined in the Tier Criteria section below.
+                </p>
+            </div>
+
+
+            <div id="tiered-view" class="view-panel">
+                <h2>Analysis by USN Tier and Program Status</h2>
+                
+                <div class="metrics-bar" style="margin-top: 20px;">
+                    <div class="metric">
+                        <div class="metric-value">25</div>
+                        <div class="metric-label">Total Schools in Tier 1</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">16</div>
+                        <div class="metric-label">Total Schools in Tier 2</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">20</div>
+                        <div class="metric-label">Total Schools in Tier 3</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">14</div>
+                        <div class="metric-label">Total Schools in Tier 4</div>
+                    </div>
+                </div>
+
+                <div class="tier-grid">
+                    <div class="tier-card">
+                        <div class="tier-header">Tier 1 (T1)</div>
+                        <div class="tier-stats">
+                            <p><strong>Confirmed Programs:</strong> 10</p>
+                            <p><strong>Potential Programs:</strong> 5</p>
+                            <p><strong>No Programs:</strong> 10</p>
+                            <p><strong>% w/ Program:</strong> 60%</p>
+                        </div>
+                    </div>
+                    <div class="tier-card">
+                        <div class="tier-header">Tier 2 (T2)</div>
+                        <div class="tier-stats">
+                            <p><strong>Confirmed Programs:</strong> 5</p>
+                            <p><strong>Potential Programs:</strong> 3</p>
+                            <p><strong>No Programs:</strong> 8</p>
+                            <p><strong>% w/ Program:</strong> 50%</p>
+                        </div>
+                    </div>
+                    <div class="tier-card">
+                        <div class="tier-header">Tier 3 (T3)</div>
+                        <div class="tier-stats">
+                            <p><strong>Confirmed Programs:</strong> 4</p>
+                            <p><strong>Potential Programs:</strong> 2</p>
+                            <p><strong>No Programs:</strong> 14</p>
+                            <p><strong>% w/ Program:</strong> 30%</p>
+                        </div>
+                    </div>
+                    <div class="tier-card">
+                        <div class="tier-header">Tier 4 (T4)</div>
+                        <div class="tier-stats">
+                            <p><strong>Confirmed Programs:</strong> 2</p>
+                            <p><strong>Potential Programs:</strong> 1</p>
+                            <p><strong>No Programs:</strong> 11</p>
+                            <p><strong>% w/ Program:</strong> 21%</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="data-table-container" style="margin-top: 30px;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>School Name</th>
+                                <th>USN Rank</th>
+                                <th>Tier</th>
+                                <th>Confirmed Program</th>
+                                <th>Potential Program</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Boston University School of Law</td>
+                                <td class="rank">27</td>
+                                <td>T2</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td>George Washington University Law School</td>
+                                <td class="rank">32</td>
+                                <td>T2</td>
+                                <td class="no-cell">-</td>
+                                <td class="yes-cell">X</td>
+                            </tr>
+                            <tr>
+                                <td>Tulane University Law School</td>
+                                <td class="rank">57</td>
+                                <td>T3</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td>Villanova University Charles Widger School of Law</td>
+                                <td class="rank">67</td>
+                                <td>T3</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td>University of Baltimore School of Law</td>
+                                <td class="rank">125</td>
+                                <td>T4</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="programs-view" class="view-panel">
+                <h2>Schools with Confirmed or Potential Summer Programs (All Tiers)</h2>
+                <div style="padding: 20px; background: #f9f9f9; border-radius: 6px;">
+                    <ul class="program-list">
+                        <li class="program-item">
+                            <div class="school-name">Yale Law School (T1)</div>
+                            <div class="program-details">Global Public Interest Fellowship</div>
+                            <div class="program-status">CONFIRMED</div>
+                        </li>
+                        <li class="program-item">
+                            <div class="school-name">University of Michigan Law School (T1)</div>
+                            <div class="program-details">International Summer School (Status Check Required)</div>
+                            <div class="program-status pending">PENDING</div>
+                        </li>
+                        <li class="program-item">
+                            <div class="school-name">Boston University School of Law (T2)</div>
+                            <div class="program-details">Intellectual Property Summer Institute</div>
+                            <div class="program-status">CONFIRMED</div>
+                        </li>
+                        <li class="program-item">
+                            <div class="school-name">Tulane University Law School (T3)</div>
+                            <div class="program-details">International Summer School in Greece</div>
+                            <div class="program-status">CONFIRMED</div>
+                        </li>
+                        <li class="program-item">
+                            <div class="school-name">Georgetown University Law Center (T1)</div>
+                            <div class="program-details">Possible summer certificate program expansion</div>
+                            <div class="program-status pending">PENDING</div>
+                        </li>
+                        <li class="program-item">
+                            <div class="school-name">University of Baltimore School of Law (T4)</div>
+                            <div class="program-details">Summer Public Service Internship Stipends</div>
+                            <div class="program-status">CONFIRMED</div>
+                        </li>
+                        <li class="program-item">
+                            <div class="school-name">University of Texas at Austin School of Law (T2)</div>
+                            <div class="program-details">No specific summer program found.</div>
+                            <div class="program-status none">NONE FOUND</div>
+                        </li>
+                        <li class="program-item">
+                            <div class="school-name">Temple University Beasley School of Law (T3)</div>
+                            <div class="program-details">Summer Internship Funding Program</div>
+                            <div class="program-status">CONFIRMED</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-note">
+            Dashboard produced November 2025. Data is a synthesized sample from uploaded files.
+        </div>
+    </div>
+
+    <script>
+        function showView(viewName) {
+            // Hide all views
+            document.querySelectorAll('.view-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Show selected view
+            document.getElementById(viewName + '-view').classList.add('active');
+            
+            // Update headers to show active section
+            document.querySelectorAll('.view-header').forEach(header => {
+                header.classList.remove('active');
+            });
+            
+            // Set the appropriate header as active
+            const viewIndex = {
+                'summary': 0,
+                't14': 1,
+                'tiered': 2,
+                'programs': 3
+            };
+            
+            if (viewIndex[viewName] !== undefined) {
+                document.querySelectorAll('.view-header')[viewIndex[viewName]].classList.add('active');
+            }
+        }
+        
+        // Initialize the dashboard to show the summary view
+        // Using window.onload to ensure the entire page and DOM are ready before running the function.
+        window.onload = function() {
+            showView('summary');
+        };
+    </script>
+</body>
+</html>
