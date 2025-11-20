@@ -415,6 +415,18 @@
             color: #999;
             font-style: italic;
         }
+        
+        /* New Footnote Styling for Commitment by Field page */
+        .impact-footnote-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+            background: #fffafa;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body onload="showView('summary')">
@@ -726,8 +738,8 @@
                         <thead>
                             <tr>
                                 <th style="width: 350px;">School</th>
-                                <th style="width: 150px;">Social Entrepreneurship</th>
-                                <th style="width: 150px;">Impact Investing</th>
+                                <th>Social Entrepreneurship</th>
+                                <th style="width: 150px;">Impact Investing*</th>
                                 <th style="width: 150px;">Sustainable Development</th>
                             </tr>
                         </thead>
@@ -849,6 +861,12 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="impact-footnote-container">
+                    * **Impact Investing Note:** Although included as a primary keyword and emphasized in our research prompts for Google Gemini and ChatGPT, “impact investing” rarely appeared in searches of law schools’, clinics’, and centers’ websites outside of NYU Law. We did find two seminar courses in law schools centered around impact investing (Finance Research Seminar: Impact Investing at Northern Illinois University College of Law offered fall 2025 and Policy Practicum: Accountability for the Unintended Consequences of Impact Investing Stanford Law offered 2017-18). We also found two one-time events that specifically mention impact investing in their titles or descriptions (a 2015 UC Irvine Law workshop “Investing for Environmental Justice in Indian Country: Exploring Social Justice Impact Investing in Tribal Projects” and a 2015 University of Colorado Law symposium “Seeds of Change: Responding to Global Change in a Bottom-Up World”). Additionally, the University of Michigan Law’s International Transactions Clinic states that they take on “impact investors” as clients. Beyond these instances, impact investing appears in one center for research description. Pace University’s Sustainable Business Law Hub mentions that they offer courses on “social impact investing and ESG ratings,” however, we were not able to find specific details on these courses. While our comprehensive research into law schools did not turn up many instances of “impact investing” in event and program titles or descriptions, we did find at least two centers outside of legal academia with “impact investing” in their names: The ESG & Impact Investing Lab at the University of Chicago’s Harris School of Public Policy and the Wharton (University of Pennsylvania) ESG Initiative & Impact Investing Research Lab.
+                </div>
+
+
             </div>
         </div>
         
@@ -915,7 +933,7 @@
                 'northeastern': { title: "Testing Pop-up Feature (Northeastern)", content: "<p>Testing pop-up feature for **Northeastern University School of Law**.</p>" },
                 'pace': { title: "Testing Pop-up Feature (Pace)", content: "<p>Testing pop-up feature for **Pace University--Elisabeth Haub School of Law**.</p>" },
                 'pepperdine': { title: "Testing Pop-up Feature (Pepperdine)", content: "<p>Testing pop-up feature for **Pepperdine Caruso School of Law**.</p>" },
-                'west_virginia': { title: "Testing Pop-up Feature (WVU)", content: "<p>Testing pop-up feature for **West Virginia University College of Law**.</p>" } // Comma removed for the last item, or correctly placed on others
+                'west_virginia': { title: "Testing Pop-up Feature (WVU)", content: "<p>Testing pop-up feature for **West Virginia University College of Law**.</p>" }
             };
 
             const data = schoolData[schoolId];
