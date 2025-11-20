@@ -491,7 +491,9 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="school-name">New York University School of Law</td>
+                                <td class="school-name" onclick="showSchoolDetails('nyu')" style="cursor: pointer; text-decoration: underline;">
+                                    New York University School of Law
+                                </td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
@@ -878,7 +880,15 @@
         </div>
     </div>
 
+    <div id="school-modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+        <div style="background-color: #fefefe; margin: 10% auto; padding: 30px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            <span onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+            <h2 id="modal-title" style="color: #330662; border-bottom: 2px solid #00abce; padding-bottom: 10px; margin-bottom: 20px;"></h2>
+            <div id="modal-content" style="line-height: 1.6; color: #555;"></div>
+        </div>
+    </div>
     <script>
+        // Existing function to switch views
         function showView(viewName) {
             // Hide all views
             document.querySelectorAll('.view-panel').forEach(panel => {
@@ -906,8 +916,40 @@
             }
         }
         
+        // NEW function to show school details modal
+        function showSchoolDetails(schoolId) {
+            let title = "";
+            let content = "";
+
+            // --- Modifying content for testing ---
+            if (schoolId === 'nyu') {
+                title = "Testing Pop-up Feature";
+                content = "<p>Testing pop-up feature</p>";
+            } else {
+                title = "Details Unavailable";
+                content = "<p>No detailed information is currently available for this school.</p>";
+            }
+            // ------------------------------------
+
+            document.getElementById('modal-title').innerHTML = title;
+            document.getElementById('modal-content').innerHTML = content;
+            document.getElementById('school-modal').style.display = 'block';
+        }
+
+        // NEW function to close the modal
+        function closeModal() {
+            document.getElementById('school-modal').style.display = 'none';
+        }
+
+        // Close modal when user clicks outside the modal box
+        window.onclick = function(event) {
+            const modal = document.getElementById('school-modal');
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+        
         // Initialize the dashboard to show the summary view
-        // Using window.onload to ensure the entire page and DOM are ready before running the function.
         window.onload = function() {
             showView('summary');
         };
