@@ -303,7 +303,7 @@
         }
     </style>
 </head>
-<body onload="showView('summary')">
+<body>
     <div class="container">
         <div class="header">
             <h1>Accredited U.S. Law Schools Research</h1>
@@ -311,7 +311,7 @@
         </div>
 
         <div class="view-controls">
-            <div class="view-header active" onclick="showView('summary')">Executive Summary</div>
+            <div class="view-header" onclick="showView('summary')">Executive Summary</div>
             <div class="view-header" onclick="showView('t14')">Tiered Short List</div>
             <div class="view-header" onclick="showView('tiered')">Commitment by Field</div>
         </div>
@@ -331,4 +331,86 @@
                             <li>Read the Copy of 2022 Strategic Planning PPT - Law School Research Competitive Landscape and visited the websites cited within.</li>
                             <li>Pulled a list of all 199 accredited law schools, and added them to this Workbook - Accredited law schools tab.</li>
                             <li>Pulled all centers and clinics mentioned in the 2022 PPT and added them to the respective Centers and Clinics tabs, including links and details.</li>
-                            <li>Checked websites of all centers and clinics mentioned in
+                            <li>Checked websites of all centers and clinics mentioned in 2022, and updated any outdated info on the Centers and Clinics tab.</li>
+                            <li>Created keywords to use in searching for any new programming related to our subject areas - see Keywords tab.</li>
+                            <li>Created GPT prompts to use in searching school websites - see ChatGPT Prompts tab.</li>
+                            <li>Divided all 199 law schools between Nick, Nikki or Zvia, and searched all 199 websites to see if any schools have added programming in our topic areas (using keywords + GPT prompts).</li>
+                            <li>Noted programming in grid in Accredited law schools tab, and added details into the following tabs: Centers, Clinics, Courses, Events, Case Studies, CLE, Reports, Extracurriculars.</li>
+                            <li>**Note:** For all programming, we saved a PDF of the websites so we would have a record of the offerings, in case websites are later edited.</li>
+                            <li>After reviewing all 199 websites, we created an Initial Short List in early August 2025 by looking for "social" within the names of Centers and Clinics, including all institutions from 2022 research, and bringing in T14 schools with potentially relevant activities. Generic entrepreneurial programs or programs focused on IP or international transactions were excluded.</li>
+                            <li>We created a Late August Short List after meeting with Deborah, focusing on institutional commitment (whether a center or program or institute coordinates all activities), looking at clinic clients for primary keywords, and looking for recurring colloquia/symposia across three academic years (2023-2024; 2024-2025; 2025-2026).</li>
+                            <li>Confirmed that all social entrepreneurship clinics were included in our Late August Short List, and checked institutions where Convening attendees teach to confirm their evaluation.</li>
+                            <li>Created definitions for Tiers I, II, and III.</li>
+                            <li>Nick and Nikki independently reviewed the Late August Short List and sorted schools into Tiers I, II, III, and Don’t Include.</li>
+                            <li>Redefined our school categories (strong, substantial, and some institutional commitment) to be based solely on the nature and depth of their institutional commitment to social entrepreneurship (e.g., dedicated centers, required courses, etc.). **US News law school rankings were explicitly excluded as a factor in this categorization.**</li>
+                            <li>Visited each law school, center, and clinic website for the schools listed on the Late August Short List, and (without using AI search tools) combed the sites to see what programming, events, extracurriculars etc. we did not include in our initial research.</li>
+                            <li>We looked at the 2017 Lit Review data to see what professors are on staff at the shortlisted institutions. We also used a research prompt and generative AI to determine which shortlisted schools have professors on staff actively publishing in social entrepreneurship, impact investing, and/or sustainable development.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="t14-view" class="view-panel">
+                <h2>Tiered Shortlist: Institutional Commitment and Programmatic Offerings</h2>
+                
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 250px;">School</th>
+                                <th>Centers or Institutes</th>
+                                <th>Clinics</th>
+                                <th>Courses</th>
+                                <th>Events</th>
+                                <th>Legal Case Studies</th>
+                                <th>CLE</th>
+                                <th>Reports</th>
+                                <th>Extracurriculars</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="school-name clickable" onclick="showSchoolDetails('nyu')">
+                                    New York University School of Law
+                                </td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            
+                            <tr class="commitment-header">
+                                <th colspan="9">Strong Institutional Commitment*</th>
+                            </tr>
+                            <tr>
+                                <td class="school-name clickable" onclick="showSchoolDetails('yale')">Yale Law School</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name clickable" onclick="showSchoolDetails('columbia')">Columbia Law School</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                                <td class="no-cell">-</td>
+                            </tr>
+                            <tr>
+                                <td class="school-name clickable" onclick="showSchoolDetails('georgetown')">Georgetown University Law Center</td>
+                                <td class="yes-cell">X</td>
+                                <td class="yes-cell">X</td>
+                                <td
