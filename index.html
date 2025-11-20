@@ -285,6 +285,11 @@
             color: #330662;
         }
 
+        .data-table .school-name.clickable {
+            cursor: pointer; 
+            text-decoration: underline;
+        }
+
         .data-table .yes-cell {
             color: #73a535;
             font-weight: bold;
@@ -491,7 +496,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="school-name" onclick="showSchoolDetails('nyu')" style="cursor: pointer; text-decoration: underline;">
+                                <td class="school-name clickable" onclick="showSchoolDetails('nyu')">
                                     New York University School of Law
                                 </td>
                                 <td class="yes-cell">X</td>
@@ -508,7 +513,7 @@
                                 <th colspan="9">Strong Institutional Commitment*</th>
                             </tr>
                             <tr>
-                                <td class="school-name">Yale Law School</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('yale')">Yale Law School</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -519,7 +524,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">Columbia Law School</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('columbia')">Columbia Law School</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
@@ -530,7 +535,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">Georgetown University Law Center</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('georgetown')">Georgetown University Law Center</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
@@ -541,7 +546,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">Northwestern Pritzker School of Law</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('northwestern')">Northwestern Pritzker School of Law</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
@@ -552,7 +557,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">UC Berkeley Law</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('berkeley')">UC Berkeley Law</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
@@ -563,7 +568,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">University of California at Los Angeles (UCLA) School of Law</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('ucla')">University of California at Los Angeles (UCLA) School of Law</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
@@ -574,7 +579,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">University of Michigan School of Law</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('michigan')">University of Michigan School of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -585,7 +590,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">University of Virginia School of Law</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('virginia')">University of Virginia School of Law</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
@@ -600,7 +605,7 @@
                                 <th colspan="9">Substantial Institutional Commitment**</th>
                             </tr>
                             <tr>
-                                <td class="school-name">Boston College Law School</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('boston_college')">Boston College Law School</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -611,7 +616,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">University of Missouri--Kansas City School of Law</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('umkc')">University of Missouri--Kansas City School of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -622,7 +627,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">University of Washington School of Law</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('washington')">University of Washington School of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -637,7 +642,7 @@
                                 <th colspan="9">Some Institutional Commitment***</th>
                             </tr>
                             <tr>
-                                <td class="school-name">Brooklyn Law School</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('brooklyn')">Brooklyn Law School</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -648,7 +653,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">Northeastern University School of Law</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('northeastern')">Northeastern University School of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -659,7 +664,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">Pace University--Elisabeth Haub School of Law</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('pace')">Pace University--Elisabeth Haub School of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -670,7 +675,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">Pepperdine Caruso School of Law</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('pepperdine')">Pepperdine Caruso School of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -681,7 +686,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">West Virginia University College of Law</td>
+                                <td class="school-name clickable" onclick="showSchoolDetails('west_virginia')">West Virginia University College of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -920,16 +925,37 @@
         function showSchoolDetails(schoolId) {
             let title = "";
             let content = "";
+            
+            // Define all school IDs and their placeholder content
+            const schoolData = {
+                'nyu': { title: "Testing Pop-up Feature (NYU)", content: "<p>Testing pop-up feature for **New York University School of Law**.</p>" },
+                'yale': { title: "Testing Pop-up Feature (Yale)", content: "<p>Testing pop-up feature for **Yale Law School**.</p>" },
+                'columbia': { title: "Testing Pop-up Feature (Columbia)", content: "<p>Testing pop-up feature for **Columbia Law School**.</p>" },
+                'georgetown': { title: "Testing Pop-up Feature (Georgetown)", content: "<p>Testing pop-up feature for **Georgetown University Law Center**.</p>" },
+                'northwestern': { title: "Testing Pop-up Feature (Northwestern)", content: "<p>Testing pop-up feature for **Northwestern Pritzker School of Law**.</p>" },
+                'berkeley': { title: "Testing Pop-up Feature (Berkeley)", content: "<p>Testing pop-up feature for **UC Berkeley Law**.</p>" },
+                'ucla': { title: "Testing Pop-up Feature (UCLA)", content: "<p>Testing pop-up feature for **UCLA School of Law**.</p>" },
+                'michigan': { title: "Testing Pop-up Feature (Michigan)", content: "<p>Testing pop-up feature for **University of Michigan School of Law**.</p>" },
+                'virginia': { title: "Testing Pop-up Feature (Virginia)", content: "<p>Testing pop-up feature for **University of Virginia School of Law**.</p>" },
+                'boston_college': { title: "Testing Pop-up Feature (BC)", content: "<p>Testing pop-up feature for **Boston College Law School**.</p>" },
+                'umkc': { title: "Testing Pop-up Feature (UMKC)", content: "<p>Testing pop-up feature for **UMKC School of Law**.</p>" },
+                'washington': { title: "Testing Pop-up Feature (Washington)", content: "<p>Testing pop-up feature for **University of Washington School of Law**.</p>" },
+                'brooklyn': { title: "Testing Pop-up Feature (Brooklyn)", content: "<p>Testing pop-up feature for **Brooklyn Law School**.</p>" },
+                'northeastern': { title: "Testing Pop-up Feature (Northeastern)", content: "<p>Testing pop-up feature for **Northeastern University School of Law**.</p>" },
+                'pace': { title: "Testing Pop-up Feature (Pace)", content: "<p>Testing pop-up feature for **Pace University--Elisabeth Haub School of Law**.</p>" },
+                'pepperdine': { title: "Testing Pop-up Feature (Pepperdine)", content: "<p>Testing pop-up feature for **Pepperdine Caruso School of Law**.</p>" },
+                'west_virginia': { title: "Testing Pop-up Feature (WVU)", content: "<p>Testing pop-up feature for **West Virginia University College of Law**.</p>" },
+            };
 
-            // --- Modifying content for testing ---
-            if (schoolId === 'nyu') {
-                title = "Testing Pop-up Feature";
-                content = "<p>Testing pop-up feature</p>";
+            const data = schoolData[schoolId];
+
+            if (data) {
+                title = data.title;
+                content = data.content;
             } else {
                 title = "Details Unavailable";
                 content = "<p>No detailed information is currently available for this school.</p>";
             }
-            // ------------------------------------
 
             document.getElementById('modal-title').innerHTML = title;
             document.getElementById('modal-content').innerHTML = content;
