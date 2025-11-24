@@ -91,7 +91,7 @@
             font-size: 1.8em;
         }
         
-        /* --- Data Table Styles (Copied from previous working fix) --- */
+        /* --- Data Table Styles --- */
         .data-table-container {
             overflow-x: auto;
         }
@@ -99,7 +99,7 @@
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed; /* Ensures columns respect defined widths */
+            table-layout: fixed; 
             font-size: 14px;
         }
 
@@ -114,7 +114,7 @@
             color: white;
             font-weight: 600;
             border-bottom: 3px solid #00abce;
-            text-transform: none; /* Override potential unwanted capitalization */
+            text-transform: none; 
         }
 
         .data-table tbody tr:nth-child(even) {
@@ -122,14 +122,14 @@
         }
 
         .data-table tbody tr:hover {
-            background-color: #ffe0b2; /* Subtle highlight on hover */
+            background-color: #ffe0b2; 
         }
         
         /* Style for the first column (School Name) */
         .data-table .school-name {
             text-align: left;
             font-weight: 500;
-            width: 280px; /* Gives the school name enough width */
+            width: 280px; 
             white-space: normal;
             cursor: pointer;
             color: #330662;
@@ -238,7 +238,7 @@
             line-height: 1.6;
         }
         
-        /* --- Executive Summary Styles (Reverting to simple display) --- */
+        /* --- Executive Summary Styles --- */
         .executive-summary, .summary-intro, .metrics-bar, .summary-grid, .tier-grid, .tier-card, .tier-criteria-container {
             max-width: 100%;
             margin: 0 auto;
@@ -248,126 +248,4 @@
             box-shadow: none;
         }
         .summary-intro h2 {
-            font-size: 1.5em;
-            color: #330662;
-        }
-        .metrics-bar {
-            display: block; 
-            margin-top: 20px;
-        }
-        .metric {
-            text-align: left;
-            padding: 5px 0;
-            border-bottom: 1px dotted #ddd;
-        }
-        .metric-value {
-            font-size: 1.5em;
-            color: #00abce;
-            display: inline-block;
-            margin-right: 10px;
-        }
-        .metric-label {
-            display: inline-block;
-            color: #333;
-        }
-        .summary-card {
-            padding: 10px;
-            border: 1px solid #eee;
-            margin-bottom: 10px;
-            background: #f9f9f9;
-        }
-        .summary-card h3 {
-            color: #00abce;
-        }
-        .summary-card .icon {
-            display: none; 
-        }
-    </style>
-</head>
-<body onload="showView('summary-view')">
-    <div class="container">
-        <div class="header">
-            <h1>Accredited U.S. Law Schools Research</h1>
-            <p>Analysis of Programmatic Offerings and Rankings</p>
-        </div>
-
-        <div class="tab-navigation">
-            <button class="tab-button active" onclick="showView('summary-view')">Executive Summary</button>
-            <button class="tab-button" onclick="showView('t14-view')">Tiered Short List</button>
-            <button class="tab-button" onclick="showView('tiered-view')">Tiered Breakdown</button>
-            <button class="tab-button" onclick="showView('programs-view')">Summer Program Focus</button>
-        </div>
-        <div class="view-container">
-            <div id="summary-view" class="view-panel active">
-                <div class="executive-summary">
-                    <div class="summary-intro">
-                        <h2>Research Overview: U.S. Law School Landscape</h2>
-                        <p>This dashboard presents research compiled on U.S. Law Schools, focusing on their ranking, tier status, and confirmed/potential summer 2025 programming relevant to specific legal fields. The data combines information on top-tier schools with a broader tiered breakdown.</p>
-                        <p>Key findings suggest a strong concentration of relevant summer programs and high-ranking status among the T14 schools, though significant program activity is also noted across all tiers. This analysis supports strategic planning for student outreach, academic collaborations, and program development.</p>
-                    </div>
-
-                    <div class="metrics-bar">
-                        <div class="metric">
-                            <div class="metric-value">17</div>
-                            <div class="metric-label">TOTAL SCHOOLS IN SHORTLIST (Revised)</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value">9</div>
-                            <div class="metric-label">SCHOOLS WITH STRONG COMMITMENT</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value">3</div>
-                            <div class="metric-label">SCHOOLS WITH SUBSTANTIAL COMMITMENT</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value">5</div>
-                            <div class="metric-label">SCHOOLS WITH SOME COMMITMENT</div>
-                        </div>
-                    </div>
-
-                    <div class="summary-grid">
-                        <div class="summary-card">
-                            <h3> T14 Concentration</h3>
-                            <p>T14 schools show high engagement with specific summer programming, suggesting they are critical partners for high-level legal research and student recruitment.</p>
-                        </div>
-                        <div class="summary-card">
-                            <h3> Geographic Spread</h3>
-                            <p>The Tiered Breakdown shows program presence across all four tiers, confirming broad national reach for program development and information dissemination.</p>
-                        </div>
-                        <div class="summary-card">
-                            <h3> Next Steps</h3>
-                            <p>Further research is recommended on the nature of the "potential" summer programs to assess feasibility and alignment with strategic goals.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="t14-view" class="view-panel">
-                <h2>Tiered Shortlist: Institutional Commitment and Programmatic Offerings</h2>
-                
-                <div class="data-table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 250px;">School</th>
-                                <th>Centers or Institutes</th>
-                                <th>Clinics</th>
-                                <th>Courses</th>
-                                <th>Events</th>
-                                <th>Legal Case Studies</th>
-                                <th>CLE</th>
-                                <th>Reports</th>
-                                <th>Extracurriculars</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="commitment-header">
-                                <th colspan="9">Strong Institutional Commitment*</th>
-                            </tr>
-                            <tr>
-                                <td class="school-name clickable" onclick="showSchoolDetails('nyu')" style="cursor: pointer; text-decoration: underline;">
-                                    New York University School of Law
-                                </td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
+            font-size: 1.5
