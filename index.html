@@ -65,7 +65,7 @@
             font-weight: 500;
             position: relative;
             padding: 5px 10px;
-            cursor: pointer;
+            cursor: pointer; /* Ensures the cursor indicates clickability */
             transition: all 0.3s;
         }
 
@@ -375,6 +375,7 @@
 
         <div class="view-controls">
             <div class="view-header active" onclick="showView('summary')">Executive Summary</div>
+            
             <div class="view-header" onclick="showView('t14')">Tiered Short List</div>
         </div>
 
@@ -739,4 +740,28 @@
             }
             // ------------------------------------
 
-            document.getElementById('
+            document.getElementById('modal-title').innerHTML = title;
+            document.getElementById('modal-content').innerHTML = content;
+            document.getElementById('school-modal').style.display = 'block';
+        }
+
+        // function to close the modal
+        function closeModal() {
+            document.getElementById('school-modal').style.display = 'none';
+        }
+
+        // Close modal when user clicks outside the modal box
+        window.onclick = function(event) {
+            const modal = document.getElementById('school-modal');
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+        
+        // Initialize the dashboard to show the summary view
+        window.onload = function() {
+            showView('summary');
+        };
+    </script>
+</body>
+</html>
