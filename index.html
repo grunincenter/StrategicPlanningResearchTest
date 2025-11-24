@@ -240,8 +240,6 @@
         
         /* --- Executive Summary Styles (Reverting to simple display) --- */
         .executive-summary, .summary-intro, .metrics-bar, .summary-grid, .tier-grid, .tier-card, .tier-criteria-container {
-            /* Removing complex grid/flex and background styles that caused the issue,
-               allowing the content to flow simply */
             max-width: 100%;
             margin: 0 auto;
             padding: 0;
@@ -254,7 +252,7 @@
             color: #330662;
         }
         .metrics-bar {
-            display: block; /* Change from flex to block for stability */
+            display: block; 
             margin-top: 20px;
         }
         .metric {
@@ -282,7 +280,7 @@
             color: #00abce;
         }
         .summary-card .icon {
-            display: none; /* Hide icons that relied on complex flex layout */
+            display: none; 
         }
     </style>
 </head>
@@ -373,201 +371,3 @@
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">Yale Law School</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">Columbia Law School</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">Georgetown University Law Center</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">Northwestern Pritzker School of Law</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">UC Berkeley Law</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">University of California at Los Angeles (UCLA) School of Law</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">University of Michigan School of Law</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">University of Virginia School of Law</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-
-                            <tr class="commitment-header">
-                                <th colspan="9">Substantial Institutional Commitment**</th>
-                            </tr>
-                            <tr>
-                                <td class="school-name">Boston College Law School</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">University of Missouri--Kansas City School of Law</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">University of Washington School of Law</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-
-                            <tr class="commitment-header">
-                                <th colspan="9">Some Institutional Commitment***</th>
-                            </tr>
-                            <tr>
-                                <td class="school-name">Brooklyn Law School</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">Northeastern University School of Law</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">Pace University--Elisabeth Haub School of Law</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">Pepperdine Caruso School of Law</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td class="school-name">West Virginia University College of Law</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="notes-section">
-                    <h4>Notes:</h4>
-                    <p>* **Strong Institutional Commitment:** Schools with evidence of commitment across a majority of categories, often including a dedicated center/institute and multiple curricular offerings. (Requires 5-8 "X"s)</p>
-                    <p>** **Substantial Institutional Commitment:** Schools with clear commitment in key areas, typically including a clinic or multiple courses. (Requires 3-4 "X"s)</p>
