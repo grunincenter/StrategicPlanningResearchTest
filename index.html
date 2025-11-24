@@ -216,7 +216,7 @@
             line-height: 1.5;
         }
 
-        /* --- New/Adapted Table and Grid Styles --- */
+        /* --- New/Adapted Table Styles --- */
         .data-table-container {
             overflow-x: auto;
             margin-bottom: 30px; 
@@ -296,92 +296,7 @@
             text-align: center;
         }
         
-        /* Tiered Breakdown Grid */
-        .tier-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-        
-        .tier-card {
-            border: 1px solid #00abce;
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        
-        .tier-header {
-            background: #00abce;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .tier-stats {
-            padding: 15px;
-            background: #f4fcff;
-        }
-        
-        .tier-stats p {
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: #330662;
-        }
-
-        .tier-stats strong {
-            font-weight: 700;
-            color: #702b9d;
-        }
-
-        /* Summer Program Focus (List style) */
-        .program-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .program-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px dashed #e0e0e0;
-        }
-
-        .program-item:last-child {
-            border-bottom: none;
-        }
-
-        .school-name {
-            flex: 1;
-            font-weight: 600;
-            color: #330662;
-            font-size: 16px;
-        }
-
-        .program-details {
-            flex: 2;
-            font-size: 14px;
-            color: #666;
-            margin-left: 20px;
-        }
-        
-        .program-status {
-            font-weight: bold;
-            color: #73a535;
-            flex-basis: 150px;
-            text-align: right;
-        }
-        
-        .program-status.none {
-            color: #cc3300;
-        }
-        
-        .program-status.pending {
-            color: #925333;
-        }
-
-        /* New List Styling */
+        /* New List Styling (keeping for now, as it's general enough) */
         .school-list-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -410,24 +325,61 @@
             color: #999;
             font-style: italic;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+            max-width: 600px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body onload="showView('summary')">
     <div class="container">
         <div class="header">
-            <h1>Accredited U.S. Law Schools Research</h1>
+            <h1>Accredited U.S. Law School Research</h1>
             <p>Analysis of Programmatic Offerings and Rankings</p>
         </div>
 
         <div class="view-controls">
             <div class="view-header active" onclick="showView('summary')">Executive Summary</div>
             <div class="view-header" onclick="showView('t14')">Tiered Short List</div>
-            <div class="view-header" onclick="showView('tiered')">Tiered Breakdown</div>
-            <div class="view-header" onclick="showView('programs')">Summer Program Focus</div>
         </div>
 
         <div class="view-container">
-            <div id="summary-view" class="view-panel">
+            <div id="summary-view" class="view-panel active">
                 <div class="executive-summary">
                     <div class="summary-intro">
                         <h2>Research Overview: U.S. Law School Landscape</h2>
@@ -508,7 +460,7 @@
                                 <th colspan="9">Strong Institutional Commitment*</th>
                             </tr>
                             <tr>
-                                <td class="school-name">Yale Law School</td>
+                                <td class="school-name" onclick="showSchoolDetails('yale')" style="cursor: pointer; text-decoration: underline;">Yale Law School</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -519,7 +471,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">Columbia Law School</td>
+                                <td class="school-name" onclick="showSchoolDetails('columbia')" style="cursor: pointer; text-decoration: underline;">Columbia Law School</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
@@ -530,7 +482,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">Georgetown University Law Center</td>
+                                <td class="school-name" onclick="showSchoolDetails('georgetown')" style="cursor: pointer; text-decoration: underline;">Georgetown University Law Center</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
@@ -541,7 +493,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">Northwestern Pritzker School of Law</td>
+                                <td class="school-name" onclick="showSchoolDetails('northwestern')" style="cursor: pointer; text-decoration: underline;">Northwestern Pritzker School of Law</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
@@ -552,7 +504,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">UC Berkeley Law</td>
+                                <td class="school-name" onclick="showSchoolDetails('berkeley')" style="cursor: pointer; text-decoration: underline;">UC Berkeley Law</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
@@ -563,7 +515,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">University of California at Los Angeles (UCLA) School of Law</td>
+                                <td class="school-name" onclick="showSchoolDetails('ucla')" style="cursor: pointer; text-decoration: underline;">University of California at Los Angeles (UCLA) School of Law</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
                                 <td class="yes-cell">X</td>
@@ -574,7 +526,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">University of Michigan School of Law</td>
+                                <td class="school-name" onclick="showSchoolDetails('michigan')" style="cursor: pointer; text-decoration: underline;">University of Michigan School of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -585,7 +537,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">University of Virginia School of Law</td>
+                                <td class="school-name" onclick="showSchoolDetails('virginia')" style="cursor: pointer; text-decoration: underline;">University of Virginia School of Law</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
@@ -600,7 +552,7 @@
                                 <th colspan="9">Substantial Institutional Commitment**</th>
                             </tr>
                             <tr>
-                                <td class="school-name">Boston College Law School</td>
+                                <td class="school-name" onclick="showSchoolDetails('bc')" style="cursor: pointer; text-decoration: underline;">Boston College Law School</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -611,7 +563,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">University of Missouri--Kansas City School of Law</td>
+                                <td class="school-name" onclick="showSchoolDetails('umkc')" style="cursor: pointer; text-decoration: underline;">University of Missouri--Kansas City School of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -622,7 +574,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">University of Washington School of Law</td>
+                                <td class="school-name" onclick="showSchoolDetails('uw')" style="cursor: pointer; text-decoration: underline;">University of Washington School of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -637,7 +589,7 @@
                                 <th colspan="9">Some Institutional Commitment***</th>
                             </tr>
                             <tr>
-                                <td class="school-name">Brooklyn Law School</td>
+                                <td class="school-name" onclick="showSchoolDetails('brooklyn')" style="cursor: pointer; text-decoration: underline;">Brooklyn Law School</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -648,7 +600,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">Northeastern University School of Law</td>
+                                <td class="school-name" onclick="showSchoolDetails('northeastern')" style="cursor: pointer; text-decoration: underline;">Northeastern University School of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -659,7 +611,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">Pace University--Elisabeth Haub School of Law</td>
+                                <td class="school-name" onclick="showSchoolDetails('pace')" style="cursor: pointer; text-decoration: underline;">Pace University--Elisabeth Haub School of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -670,7 +622,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">Pepperdine Caruso School of Law</td>
+                                <td class="school-name" onclick="showSchoolDetails('pepperdine')" style="cursor: pointer; text-decoration: underline;">Pepperdine Caruso School of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -681,7 +633,7 @@
                                 <td class="no-cell">-</td>
                             </tr>
                             <tr>
-                                <td class="school-name">West Virginia University College of Law</td>
+                                <td class="school-name" onclick="showSchoolDetails('wvu')" style="cursor: pointer; text-decoration: underline;">West Virginia University College of Law</td>
                                 <td class="no-cell">-</td>
                                 <td class="yes-cell">X</td>
                                 <td class="no-cell">-</td>
@@ -711,248 +663,80 @@
                     */**/*** These commitment levels are defined in the Tier Criteria section below.
                 </p>
             </div>
-
-
-            <div id="tiered-view" class="view-panel">
-                <h2>Analysis by USN Tier and Program Status</h2>
-                
-                <div class="metrics-bar" style="margin-top: 20px;">
-                    <div class="metric">
-                        <div class="metric-value">25</div>
-                        <div class="metric-label">Total Schools in Tier 1</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value">16</div>
-                        <div class="metric-label">Total Schools in Tier 2</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value">20</div>
-                        <div class="metric-label">Total Schools in Tier 3</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value">14</div>
-                        <div class="metric-label">Total Schools in Tier 4</div>
-                    </div>
-                </div>
-
-                <div class="tier-grid">
-                    <div class="tier-card">
-                        <div class="tier-header">Tier 1 (T1)</div>
-                        <div class="tier-stats">
-                            <p><strong>Confirmed Programs:</strong> 10</p>
-                            <p><strong>Potential Programs:</strong> 5</p>
-                            <p><strong>No Programs:</strong> 10</p>
-                            <p><strong>% w/ Program:</strong> 60%</p>
-                        </div>
-                    </div>
-                    <div class="tier-card">
-                        <div class="tier-header">Tier 2 (T2)</div>
-                        <div class="tier-stats">
-                            <p><strong>Confirmed Programs:</strong> 5</p>
-                            <p><strong>Potential Programs:</strong> 3</p>
-                            <p><strong>No Programs:</strong> 8</p>
-                            <p><strong>% w/ Program:</strong> 50%</p>
-                        </div>
-                    </div>
-                    <div class="tier-card">
-                        <div class="tier-header">Tier 3 (T3)</div>
-                        <div class="tier-stats">
-                            <p><strong>Confirmed Programs:</strong> 4</p>
-                            <p><strong>Potential Programs:</strong> 2</p>
-                            <p><strong>No Programs:</strong> 14</p>
-                            <p><strong>% w/ Program:</strong> 30%</p>
-                        </div>
-                    </div>
-                    <div class="tier-card">
-                        <div class="tier-header">Tier 4 (T4)</div>
-                        <div class="tier-stats">
-                            <p><strong>Confirmed Programs:</strong> 2</p>
-                            <p><strong>Potential Programs:</strong> 1</p>
-                            <p><strong>No Programs:</strong> 11</p>
-                            <p><strong>% w/ Program:</strong> 21%</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="data-table-container" style="margin-top: 30px;">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>School Name</th>
-                                <th>USN Rank</th>
-                                <th>Tier</th>
-                                <th>Confirmed Program</th>
-                                <th>Potential Program</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Boston University School of Law</td>
-                                <td class="rank">27</td>
-                                <td>T2</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td>George Washington University Law School</td>
-                                <td class="rank">32</td>
-                                <td>T2</td>
-                                <td class="no-cell">-</td>
-                                <td class="yes-cell">X</td>
-                            </tr>
-                            <tr>
-                                <td>Tulane University Law School</td>
-                                <td class="rank">57</td>
-                                <td>T3</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td>Villanova University Charles Widger School of Law</td>
-                                <td class="rank">67</td>
-                                <td>T3</td>
-                                <td class="no-cell">-</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                            <tr>
-                                <td>University of Baltimore School of Law</td>
-                                <td class="rank">125</td>
-                                <td>T4</td>
-                                <td class="yes-cell">X</td>
-                                <td class="no-cell">-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="programs-view" class="view-panel">
-                <h2>Schools with Confirmed or Potential Summer Programs (All Tiers)</h2>
-                <div style="padding: 20px; background: #f9f9f9; border-radius: 6px;">
-                    <ul class="program-list">
-                        <li class="program-item">
-                            <div class="school-name">Yale Law School (T1)</div>
-                            <div class="program-details">Global Public Interest Fellowship</div>
-                            <div class="program-status">CONFIRMED</div>
-                        </li>
-                        <li class="program-item">
-                            <div class="school-name">University of Michigan Law School (T1)</div>
-                            <div class="program-details">International Summer School (Status Check Required)</div>
-                            <div class="program-status pending">PENDING</div>
-                        </li>
-                        <li class="program-item">
-                            <div class="school-name">Boston University School of Law (T2)</div>
-                            <div class="program-details">Intellectual Property Summer Institute</div>
-                            <div class="program-status">CONFIRMED</div>
-                        </li>
-                        <li class="program-item">
-                            <div class="school-name">Tulane University Law School (T3)</div>
-                            <div class="program-details">International Summer School in Greece</div>
-                            <div class="program-status">CONFIRMED</div>
-                        </li>
-                        <li class="program-item">
-                            <div class="school-name">Georgetown University Law Center (T1)</div>
-                            <div class="program-details">Possible summer certificate program expansion</div>
-                            <div class="program-status pending">PENDING</div>
-                        </li>
-                        <li class="program-item">
-                            <div class="school-name">University of Baltimore School of Law (T4)</div>
-                            <div class="program-details">Summer Public Service Internship Stipends</div>
-                            <div class="program-status">CONFIRMED</div>
-                        </li>
-                        <li class="program-item">
-                            <div class="school-name">University of Texas at Austin School of Law (T2)</div>
-                            <div class="program-details">No specific summer program found.</div>
-                            <div class="program-status none">NONE FOUND</div>
-                        </li>
-                        <li class="program-item">
-                            <div class="school-name">Temple University Beasley School of Law (T3)</div>
-                            <div class="program-details">Summer Internship Funding Program</div>
-                            <div class="program-status">CONFIRMED</div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            
+        </div> <div class="footer-note">
+            Data compiled from institutional websites and program materials as of Q4 2024. Program status for Summer 2025 is subject to change.
         </div>
-        
-        <div class="footer-note">
-            Dashboard produced November 2025. Data is a synthesized sample from uploaded files.
+
+    </div> <div id="school-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title" style="color: #330662; border-bottom: 2px solid #00abce; padding-bottom: 10px;">School Details</h2>
+            <div id="modal-content" style="margin-top: 15px;">
+                </div>
         </div>
     </div>
 
-    <div id="school-modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
-        <div style="background-color: #fefefe; margin: 10% auto; padding: 30px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-            <span onclick="closeModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
-            <h2 id="modal-title" style="color: #330662; border-bottom: 2px solid #00abce; padding-bottom: 10px; margin-bottom: 20px;"></h2>
-            <div id="modal-content" style="line-height: 1.6; color: #555;"></div>
-        </div>
-    </div>
     <script>
-        // Existing function to switch views
-        function showView(viewName) {
-            // Hide all views
-            document.querySelectorAll('.view-panel').forEach(panel => {
-                panel.classList.remove('active');
-            });
-            
-            // Show selected view
-            document.getElementById(viewName + '-view').classList.add('active');
-            
-            // Update headers to show active section
-            document.querySelectorAll('.view-header').forEach(header => {
-                header.classList.remove('active');
-            });
-            
-            // Set the appropriate header as active
-            const viewIndex = {
-                'summary': 0,
-                't14': 1,
-                'tiered': 2,
-                'programs': 3
-            };
-            
-            if (viewIndex[viewName] !== undefined) {
-                document.querySelectorAll('.view-header')[viewIndex[viewName]].classList.add('active');
+        // Function to switch between views (tabs)
+        function showView(viewId) {
+            // Hide all view panels
+            const panels = document.querySelectorAll('.view-panel');
+            panels.forEach(panel => panel.classList.remove('active'));
+
+            // Deactivate all view headers
+            const headers = document.querySelectorAll('.view-header');
+            headers.forEach(header => header.classList.remove('active'));
+
+            // Show the selected view panel
+            document.getElementById(viewId + '-view').classList.add('active');
+
+            // Activate the corresponding view header
+            const activeHeader = document.querySelector(`.view-header[onclick="showView('${viewId}')"]`);
+            if (activeHeader) {
+                activeHeader.classList.add('active');
             }
         }
-        
-        // NEW function to show school details modal
-        function showSchoolDetails(schoolId) {
-            let title = "";
-            let content = "";
 
-            // --- Modifying content for testing ---
+        // 1. School ID to Full Name mapping
+        const schoolMap = {
+            'nyu': 'New York University School of Law',
+            'yale': 'Yale Law School',
+            'columbia': 'Columbia Law School',
+            'georgetown': 'Georgetown University Law Center',
+            'northwestern': 'Northwestern Pritzker School of Law',
+            'berkeley': 'UC Berkeley Law',
+            'ucla': 'University of California at Los Angeles (UCLA) School of Law',
+            'michigan': 'University of Michigan School of Law',
+            'virginia': 'University of Virginia School of Law',
+            'bc': 'Boston College Law School',
+            'umkc': 'University of Missouri--Kansas City School of Law',
+            'uw': 'University of Washington School of Law',
+            'brooklyn': 'Brooklyn Law School',
+            'northeastern': 'Northeastern University School of Law',
+            'pace': 'Pace University--Elisabeth Haub School of Law',
+            'pepperdine': 'Pepperdine Caruso School of Law',
+            'wvu': 'West Virginia University College of Law'
+        };
+
+        // Function to show school details modal
+        function showSchoolDetails(schoolId) {
+            const schoolName = schoolMap[schoolId] || 'Unknown School';
+            let title = `${schoolName} Details`;
+            let content = `<p>Details for **${schoolName}** have not been specified yet.</p><p>Click on the **New York University School of Law** name above for an example of how detailed content can be structured here.</p>`;
+
+            // --- Define custom content for NYU ---
             if (schoolId === 'nyu') {
-                title = "Testing Pop-up Feature";
-                content = "<p>Testing pop-up feature</p>";
-            } else {
-                title = "Details Unavailable";
-                content = "<p>No detailed information is currently available for this school.</p>";
+                content = `
+                    <p>NYU is listed under Strong Institutional Commitment due to its established **Jacobson Leadership Program in Law and Business**, which often focuses on social enterprise and impact investing.</p>
+                    <ul class="school-list-grid">
+                        <li>**Centers/Institutes:** Dedicated program structure.</li>
+                        <li>**Clinics:** Strong focus through multiple specialized clinics.</li>
+                        <li>**Courses:** Extensive specialized offerings, including modules on impact measurement.</li>
+                        <li>**Events:** Annual symposia and practitioner workshops focused on social enterprise law.</li>
+                    </ul>
+                `;
             }
             // ------------------------------------
 
-            document.getElementById('modal-title').innerHTML = title;
-            document.getElementById('modal-content').innerHTML = content;
-            document.getElementById('school-modal').style.display = 'block';
-        }
-
-        // NEW function to close the modal
-        function closeModal() {
-            document.getElementById('school-modal').style.display = 'none';
-        }
-
-        // Close modal when user clicks outside the modal box
-        window.onclick = function(event) {
-            const modal = document.getElementById('school-modal');
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        }
-        
-        // Initialize the dashboard to show the summary view
-        window.onload = function() {
-            showView('summary');
-        };
-    </script>
-</body>
-</html>
+            document.getElementById('
