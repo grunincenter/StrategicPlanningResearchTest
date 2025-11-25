@@ -52,12 +52,12 @@
             display: flex;
             justify-content: center;
             align-items: baseline;
-            gap: 10px; /* Reduced gap to fit 7 tabs */
+            gap: 10px;
             margin-bottom: 30px;
             padding: 20px;
             background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
             border-radius: 8px;
-            flex-wrap: wrap; /* Allows tabs to wrap on smaller screens */
+            flex-wrap: wrap;
         }
 
         .view-header {
@@ -65,10 +65,10 @@
             font-size: 14px;
             font-weight: 500;
             position: relative;
-            padding: 8px 10px; /* Adjusted padding */
+            padding: 8px 10px;
             cursor: pointer; 
             transition: all 0.3s;
-            white-space: nowrap; /* Keep tab name on one line */
+            white-space: nowrap;
         }
 
         .view-header:hover:not(.active) {
@@ -77,7 +77,7 @@
 
         .view-header.active {
             color: #330662;
-            font-size: 16px; /* Slightly smaller font for 7 tabs */
+            font-size: 16px;
             font-weight: 700;
             padding: 10px 15px;
             background: white;
@@ -90,7 +90,7 @@
         .view-header:not(.active)::after {
             content: '|';
             position: absolute;
-            right: -8px; /* Adjusted position */
+            right: -8px;
             color: #ddd;
         }
 
@@ -104,7 +104,7 @@
 
         .view-panel {
             display: none;
-            padding-top: 20px; /* Added spacing */
+            padding-top: 20px;
         }
 
         .view-panel.active {
@@ -216,6 +216,17 @@
             white-space: nowrap;
             vertical-align: top; 
         }
+        
+        /* FIX: Style for the dynamically inserted tier headers in the shortlist table */
+        .data-table .commitment-header th {
+            background: #9d7cc4 !important; /* Lighter purple */
+            text-align: center;
+            position: static; /* Prevent tier headers from sticking with the main header */
+        }
+        /* Style for the checkmark/cross cells */
+        .data-table .yes-cell { color: #00abce; font-weight: bold; }
+        .data-table .no-cell { color: #ccc; }
+
 
         /* --- Field Strength Dot Indicators --- */
         .strength-indicator {
@@ -399,7 +410,7 @@
                 <div class="executive-summary">
                     <div class="summary-intro">
                         <h2>Research Overview: U.S. Law School Landscape</h2>
-                        <p>This dashboard presents research compiled on U.S. Law Schools, focusing on their ranking, tier status, and confirmed/potential programming relevant to specific legal fields. Data is now loaded dynamically from CSV files in the `/data/` folder. The goal is to position NYU Law as the benchmark and map the competitive landscape[cite: 309, 310].</p>
+                        <p>This dashboard presents research compiled on U.S. Law Schools, focusing on their ranking, tier status, and confirmed/potential programming relevant to specific legal fields. Data is now loaded dynamically from CSV files in the `/data/` folder. The goal is to position NYU Law as the benchmark and map the competitive landscape.</p>
                     </div>
 
                     <div class="metrics-bar">
@@ -423,14 +434,14 @@
 
                     <h3>Executive Summary Narrative</h3>
                     <p id="summary-narrative" style="padding: 10px; border-left: 3px solid #00abce;">
-                        Waiting for data to load... Once data is loaded from `schools.csv`, this section will automatically populate with high-level statistics and key findings[cite: 317].
+                        Waiting for data to load... Once data is loaded from `schools.csv`, this section will automatically populate with high-level statistics and key findings.
                     </p>
                 </div>
             </div>
 
             <div id="shortlist-view" class="view-panel">
                 <h2>Short List: Institutional Commitment Matrix</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Matrix view of schools with demonstrated institutional commitment, organized by tier. Displays tier badge, field strength dots (SE/II/SD), and offering checkmarks[cite: 320, 321, 322].</p>
+                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Matrix view of schools with demonstrated institutional commitment, organized by tier. Displays tier badge, field strength dots (SE/II/SD), and offering checkmarks.</p>
                 <div class="data-table-container">
                     <table class="data-table">
                         <thead>
@@ -454,15 +465,15 @@
 
             <div id="map-view" class="view-panel">
                 <h2>Map: Geographic Visualization</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Map will show the location of all schools with relevant activity. Short list schools should appear in purple; other schools with some activity appear in gray[cite: 324, 325]. (NOTE: The actual map rendering requires a mapping library like Leaflet or Google Maps API, which cannot be included in this static HTML. A static placeholder is shown.)</p>
-                <div style="background-color: #e0e0e0; height: 400px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;">
+                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Map will show the location of all schools with relevant activity. Short list schools should appear in purple; other schools with some activity appear in gray. (NOTE: The actual map rendering requires a mapping library like Leaflet or Google Maps API, which cannot be included in this static HTML. A static placeholder is shown.)</p>
+                <div id="mapid" style="background-color: #e0e0e0; height: 400px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;">
                     <p style="color: #666;">[Placeholder for Interactive Map of U.S. Law Schools]</p>
                 </div>
             </div>
 
             <div id="centers-view" class="view-panel">
                 <h2>Institutes, Centers & Programs</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Card-based display of all centers/institutes with relevant programming. NYU appears first; short list schools highlighted in purple; all other schools shown in gray[cite: 327, 328].</p>
+                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Card-based display of all centers/institutes with relevant programming. NYU appears first; short list schools highlighted in purple; all other schools shown in gray.</p>
                 <div class="card-gallery" id="centers-card-gallery">
                     <p>Waiting for data from `centers.csv`...</p>
                 </div>
@@ -470,7 +481,7 @@
 
             <div id="clinics-view" class="view-panel">
                 <h2>Clinics</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Card-based display for clinics serving social entrepreneurs, impact investors, or sustainable development clients[cite: 329, 330]. Filterable by short list vs. all schools[cite: 331].</p>
+                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Card-based display for clinics serving social entrepreneurs, impact investors, or sustainable development clients. Filterable by short list vs. all schools.</p>
                 <div class="card-gallery" id="clinics-card-gallery">
                     <p>Waiting for data from `clinics.csv`...</p>
                 </div>
@@ -478,7 +489,7 @@
 
             <div id="events-view" class="view-panel">
                 <h2>Symposia, Conferences, and Recurring Events</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Shows event name, type, whether recurring or one-time, field strength, and last held date. Useful for tracking field activity and partnership opportunities[cite: 333, 334].</p>
+                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Shows event name, type, whether recurring or one-time, field strength, and last held date. Useful for tracking field activity and partnership opportunities.</p>
                 <div class="card-gallery" id="events-card-gallery">
                     <p>Waiting for data from `events.csv`...</p>
                 </div>
@@ -486,7 +497,7 @@
 
             <div id="stories-view" class="view-panel">
                 <h2>Stories & Emerging Programs</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Qualitative card gallery for items that don't fit neatly into other categories: new programs, one-off events, and notable details[cite: 336].</p>
+                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Qualitative card gallery for items that don't fit neatly into other categories: new programs, one-off events, and notable details.</p>
                 <div class="card-gallery" id="stories-card-gallery">
                     <p>Waiting for data from `stories.csv`...</p>
                 </div>
@@ -495,7 +506,7 @@
         </div>
         
         <div class="footer-note">
-            Data loaded dynamically from CSV files in the /data/ folder. Data verification date will be reflected in the source files[cite: 373].
+            Data loaded dynamically from CSV files in the /data/ folder. Data verification date will be reflected in the source files.
         </div>
 
     </div> 
@@ -534,7 +545,9 @@
             const lines = csvText.trim().split('\n');
             if (lines.length === 0) return [];
             
-            const headers = lines[0].split(',').map(h => h.trim());
+            // NOTE: Simple split(',') is used here but may fail if data contains escaped commas.
+            // For production, a robust CSV library (like PapaParse) is recommended.
+            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
             const result = [];
             
             for (let i = 1; i < lines.length; i++) {
@@ -544,7 +557,7 @@
                 const row = {};
                 headers.forEach((header, index) => {
                     // Trim and handle boolean/numeric values
-                    let value = values[index].trim();
+                    let value = values[index].trim().replace(/"/g, ''); // Remove quotes too
                     if (value.toLowerCase() === 'true') value = true;
                     else if (value.toLowerCase() === 'false') value = false;
                     else if (!isNaN(value) && value !== '') value = Number(value);
@@ -622,7 +635,10 @@
             const tbody = document.getElementById('shortlist-table-body');
             let html = '';
             
-            const schoolsByTier = data.schools.reduce((acc, school) => {
+            // Filter out schools without a tier, then group by tier
+            const tieredSchools = data.schools.filter(s => s.tier);
+
+            const schoolsByTier = tieredSchools.reduce((acc, school) => {
                 if (!acc[school.tier]) acc[school.tier] = [];
                 acc[school.tier].push(school);
                 return acc;
@@ -679,7 +695,14 @@
                 return;
             }
 
-            dataArray.forEach(item => {
+            // Ensure NYU's program (if applicable) is first
+            const sortedData = dataArray.sort((a, b) => {
+                if (a.school_id === 1) return -1;
+                if (b.school_id === 1) return 1;
+                return 0;
+            });
+
+            sortedData.forEach(item => {
                 const school = data.schools.find(s => s.school_id === item.school_id) || { school_name: 'Unknown School', tier: 'N/A' };
                 const isHighlight = highlightCondition(school, item);
                 const highlightClass = isHighlight ? 'highlight' : '';
@@ -760,7 +783,6 @@
             // 1. Render all dynamic content
             renderExecutiveSummary();
             renderShortList();
-            // The Map tab remains a static placeholder unless a mapping library is added.
             
             // Highlight NYU and any schools with 'Strong Institutional Commitment'
             const highlightSchools = (school) => school.school_id === 1 || school.tier === 'Strong Institutional Commitment';
@@ -774,142 +796,77 @@
             showView('summary'); 
         }
 
-        // --- CORE NAVIGATION/MODAL FUNCTIONS (from previous versions) ---
+        // --- CORE NAVIGATION/MODAL FUNCTIONS ---
 
         /**
          * CORE FUNCTION: Toggles the active view and updates the header tabs.
          */
-       function showView(viewId) {
-            // Hide all view panels
-            document.querySelectorAll('.view-panel').forEach(panel => {
-                panel.classList.remove('active');
-                panel.style.display = 'none';
-            });
+        function showView(viewId) {
+            // Hide all view panels
+            document.querySelectorAll('.view-panel').forEach(panel => {
+                panel.classList.remove('active');
+                panel.style.display = 'none';
+            });
 
-            // Deactivate all view headers
-            document.querySelectorAll('.view-header').forEach(header => {
-                header.classList.remove('active');
-            });
+            // Deactivate all view headers
+            document.querySelectorAll('.view-header').forEach(header => {
+                header.classList.remove('active');
+            });
 
-            // Show the requested view panel
-            const targetPanel = document.getElementById(viewId + '-view');
-            if (targetPanel) {
-                targetPanel.classList.add('active');
-                targetPanel.style.display = 'block';
-            }
+            // Show the requested view panel
+            const targetPanel = document.getElementById(viewId + '-view');
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+                targetPanel.style.display = 'block';
+            }
 
-            // Activate the corresponding header
-            const targetHeader = document.querySelector(`.view-header[onclick*="showView('${viewId}')"]`);
-            if (targetHeader) {
-                targetHeader.classList.add('active');
-            }
-        }
-
-            // Activate the corresponding header
+            // Activate the corresponding header (FIXED: The logic to find and activate the header)
             const targetHeader = document.querySelector(`.view-header[onclick*="showView('${viewId}')"]`);
             if (targetHeader) {
                 targetHeader.classList.add('active');
             }
-        }
-let mymap = null; // Variable to hold the map object globally
+        } // <--- This closing brace was missing!
+
 
         /**
-         * Renders the Leaflet map and plots school locations.
+         * MODAL FUNCTION: Displays the details for a specific school.
          */
-        function renderMap() {
-            // Prevent map re-initialization if already created
-            if (mymap !== null) {
-                mymap.remove();
-            }
-
-            // Set the initial center for the US map and zoom level 4
-            mymap = L.map('mapid').setView([39.8283, -98.5795], 4); 
-
-            // Add the base map layer (OpenStreetMap)
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(mymap);
-
-            // Add markers for each school
-            data.schools.forEach(school => {
-                // The CSV columns are read as strings, so we convert to float for the map
-                const lat = parseFloat(school.latitude);
-                const lon = parseFloat(school.longitude);
-                
-                // Ensure valid coordinates exist
-                if (!isNaN(lat) && !isNaN(lon)) {
-                    let markerColor;
-                    if (school.tier === 'Strong Institutional Commitment') {
-                        markerColor = 'purple';
-                    } else if (school.tier === 'Substantial Institutional Commitment') {
-                        markerColor = 'blue';
-                    } else {
-                        // All "Some Institutional Commitment" schools will be gray
-                        markerColor = 'gray'; 
-                    }
-
-                    // Create a custom icon for color (A simple colored circle)
-                    const customIcon = L.divIcon({
-                        className: 'custom-div-icon',
-                        html: `<div style="background-color: ${markerColor}; width: 15px; height: 15px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>`,
-                        iconSize: [20, 20],
-                        iconAnchor: [10, 10]
-                    });
-
-                    // Create the popup content
-                    const popupContent = `
-                        <strong>${school.school_name}</strong><br>
-                        Tier: ${school.tier}<br>
-                        SE: ${school.se_strength}/3 | II: ${school.ii_strength}/3 | SD: ${school.sd_strength}/3<br>
-                        <a href="${school.school_url}" target="_blank">School Website</a>
-                    `;
-
-                    // Add the marker to the map
-                    L.marker([lat, lon], { icon: customIcon })
-                        .bindPopup(popupContent)
-                        .addTo(mymap);
-                }
-            });
-        }
-        // Existing function to show school details modal
         function showSchoolDetails(schoolId) {
             const school = data.schools.find(s => s.school_id === schoolId);
-            
-            let title = school ? school.school_name : "School Details";
-            let content = '';
 
-            if (school) {
-                content += `<p><strong>Tier:</strong> ${school.tier}</p>`;
-                content += `<p><strong>Location:</strong> ${school.city}, ${school.state}</p>`;
-                content += `<p><strong>Link:</strong> <a href="${school.school_url}" target="_blank">${school.school_url}</a></p>`;
-                content += `<p><strong>Partnership Note:</strong> ${school.partnership_note || 'N/A'}</p>`;
-                // Add more details from the 'school' object as needed
-            } else {
-                content = "<p>No detailed information is currently available for this school ID.</p>";
+            if (!school) {
+                console.error("School not found:", schoolId);
+                return;
             }
 
-            document.getElementById('modal-title').innerHTML = title;
-            document.getElementById('modal-content').innerHTML = content;
+            document.getElementById('modal-title').textContent = school.school_name;
+            document.getElementById('modal-content').innerHTML = `
+                <p><strong>Tier:</strong> ${school.tier}</p>
+                <p><strong>Ranking:</strong> ${school.ranking || 'N/A'}</p>
+                <p style="margin-top: 15px;"><strong>Commitment Details:</strong></p>
+                <ul>
+                    <li>Social Entrepreneurship Strength: ${generateStrengthDots(school.se_strength, 'se')}</li>
+                    <li>Impact Investing Strength: ${generateStrengthDots(school.ii_strength, 'ii')}</li>
+                    <li>Sustainable Development Strength: ${generateStrengthDots(school.sd_strength, 'sd')}</li>
+                </ul>
+                <p style="margin-top: 15px;">**Full programmatic data (centers, clinics, etc.) for this school would be dynamically loaded here in a fully functional dashboard.**</p>
+                <p style="font-size: 12px; color: #999; margin-top: 10px;">Note: This detail is a placeholder summary.</p>
+            `;
+
             document.getElementById('school-modal').style.display = 'block';
         }
 
-        // Existing function to close the modal
+
+        /**
+         * MODAL FUNCTION: Hides the school details modal.
+         */
         function closeModal() {
             document.getElementById('school-modal').style.display = 'none';
         }
 
-        // Close modal when user clicks outside the modal box
-        window.onclick = function(event) {
-            const modal = document.getElementById('school-modal');
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        }
-        
-        // Start loading the data when the page first loads
-        window.onload = loadData;
+        // Initializer
+        document.addEventListener('DOMContentLoaded', loadData);
+
     </script>
 </body>
-
 </html>
-
