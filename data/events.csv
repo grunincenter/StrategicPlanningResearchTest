@@ -1,0 +1,12 @@
+school_id,event_name,event_type,is_recurring,se_strength,ii_strength,sd_strength,description,url,last_held
+nyu,Annual Conference on Social Entrepreneurship and the Law,Conference,TRUE,3,3,3,"Annual gathering of practitioners, scholars, and students in social enterprise law.",,2025
+nyu,Impact Investing Workshop,Workshop,TRUE,2,3,2,"CLE workshop on launching and managing impact investment funds.",,2025
+columbia,Columbia International Investment Conference,Conference,TRUE,2,3,3,"Annual conference bringing together government officials, corporate executives, investors, academics, and civil society for discussions on international investment for sustainable development.",https://ccsi.columbia.edu/,2024
+umkc,Midwest Symposium on Social Entrepreneurship,Symposium,TRUE,3,2,1,"Regional symposium with CLE credits, specialized journal issues.",,2025
+northwestern,Future of Innovation Sustainability and the Law Symposium,Symposium,TRUE,2,2,3,"Addresses ESG issues, innovation, and sustainability in legal practice.",,2024
+berkeley,Social Enterprise Law Conference,Conference,TRUE,3,2,2,"Annual conference on social enterprise legal issues.",,2024
+ucla,ESG Executive Education Series,Speaker Series,TRUE,1,2,2,"Partnership with Berkeley for executive education on ESG topics.",,2025
+pepperdine,Corporate Social Responsibility Lecture,Speaker Series,FALSE,1,1,1,"Occasional lectures on CSR topics.",,2023
+penn_state,Exploring ESG: Navigating Responsible Business Practices Symposium,Symposium,FALSE,0,2,2,"One-day symposium exploring ESG. 5.0 hours of CLE credit awarded.",,2024
+uc_davis,The E in ESG Symposium,Symposium,FALSE,0,2,2,"One-day symposium exploring how ESG informs corporate decisions and environmental sustainability.",,2024
+unc,Charting the Path Forward for ESG Disclosure Symposium,Symposium,FALSE,0,2,2,"North Carolina Journal of International Law Annual Symposium.",,2024
