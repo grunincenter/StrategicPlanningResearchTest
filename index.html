@@ -366,7 +366,6 @@
             width: 100%;
         }
     </style>
-    </style>
 </head>
 <body>
     <div class="container">
@@ -780,24 +779,31 @@
         /**
          * CORE FUNCTION: Toggles the active view and updates the header tabs.
          */
-        function showView(viewId) {
-            // Hide all view panels
-            document.querySelectorAll('.view-panel').forEach(panel => {
-                panel.classList.remove('active');
-                panel.style.display = 'none';
-            });
+       function showView(viewId) {
+            // Hide all view panels
+            document.querySelectorAll('.view-panel').forEach(panel => {
+                panel.classList.remove('active');
+                panel.style.display = 'none';
+            });
 
-            // Deactivate all view headers
-            document.querySelectorAll('.view-header').forEach(header => {
-                header.classList.remove('active');
-            });
+            // Deactivate all view headers
+            document.querySelectorAll('.view-header').forEach(header => {
+                header.classList.remove('active');
+            });
 
-            // Show the requested view panel
-            const targetPanel = document.getElementById(viewId + '-view');
-            if (targetPanel) {
-                targetPanel.classList.add('active');
-                targetPanel.style.display = 'block';
-            }
+            // Show the requested view panel
+            const targetPanel = document.getElementById(viewId + '-view');
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+                targetPanel.style.display = 'block';
+            }
+
+            // Activate the corresponding header
+            const targetHeader = document.querySelector(`.view-header[onclick*="showView('${viewId}')"]`);
+            if (targetHeader) {
+                targetHeader.classList.add('active');
+            }
+        }
 
             // Activate the corresponding header
             const targetHeader = document.querySelector(`.view-header[onclick*="showView('${viewId}')"]`);
@@ -805,7 +811,66 @@
                 targetHeader.classList.add('active');
             }
         }
+let mymap = null; // Variable to hold the map object globally
 
+        /**
+         * Renders the Leaflet map and plots school locations.
+         */
+        function renderMap() {
+            // Prevent map re-initialization if already created
+            if (mymap !== null) {
+                mymap.remove();
+            }
+
+            // Set the initial center for the US map and zoom level 4
+            mymap = L.map('mapid').setView([39.8283, -98.5795], 4); 
+
+            // Add the base map layer (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(mymap);
+
+            // Add markers for each school
+            data.schools.forEach(school => {
+                // The CSV columns are read as strings, so we convert to float for the map
+                const lat = parseFloat(school.latitude);
+                const lon = parseFloat(school.longitude);
+                
+                // Ensure valid coordinates exist
+                if (!isNaN(lat) && !isNaN(lon)) {
+                    let markerColor;
+                    if (school.tier === 'Strong Institutional Commitment') {
+                        markerColor = 'purple';
+                    } else if (school.tier === 'Substantial Institutional Commitment') {
+                        markerColor = 'blue';
+                    } else {
+                        // All "Some Institutional Commitment" schools will be gray
+                        markerColor = 'gray'; 
+                    }
+
+                    // Create a custom icon for color (A simple colored circle)
+                    const customIcon = L.divIcon({
+                        className: 'custom-div-icon',
+                        html: `<div style="background-color: ${markerColor}; width: 15px; height: 15px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>`,
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    });
+
+                    // Create the popup content
+                    const popupContent = `
+                        <strong>${school.school_name}</strong><br>
+                        Tier: ${school.tier}<br>
+                        SE: ${school.se_strength}/3 | II: ${school.ii_strength}/3 | SD: ${school.sd_strength}/3<br>
+                        <a href="${school.school_url}" target="_blank">School Website</a>
+                    `;
+
+                    // Add the marker to the map
+                    L.marker([lat, lon], { icon: customIcon })
+                        .bindPopup(popupContent)
+                        .addTo(mymap);
+                }
+            });
+        }
         // Existing function to show school details modal
         function showSchoolDetails(schoolId) {
             const school = data.schools.find(s => s.school_id === schoolId);
@@ -847,3 +912,4 @@
 </body>
 
 </html>
+
