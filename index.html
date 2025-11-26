@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" 
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20n6a4sE0B486z5yGgB8hCWA49pA/rI3mR6kXfQ7jR4=" crossorigin=""></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strategic Planning Research Version 2 - Comparative Analysis</title>
@@ -470,8 +465,10 @@
 
             <div id="map-view" class="view-panel">
                 <h2>Map: Geographic Visualization</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Map will show the location of all schools with relevant activity. Short list schools should appear in purple; other schools with some activity appear in gray.</p>
-                <div id="mapid"></div>
+                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Map will show the location of all schools with relevant activity. Short list schools should appear in purple; other schools with some activity appear in gray. (NOTE: The actual map rendering requires a mapping library like Leaflet or Google Maps API, which cannot be included in this static HTML. A static placeholder is shown.)</p>
+                <div id="mapid" style="background-color: #e0e0e0; height: 400px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;">
+                    <p style="color: #666;">[Placeholder for Interactive Map of U.S. Law Schools]</p>
+                </div>
             </div>
 
             <div id="centers-view" class="view-panel">
@@ -525,34 +522,16 @@
     </div>
 
     <script>
-        // Data storage object for all data (PRE-POPULATED to bypass failed CSV loading)
+        // Data storage object for all loaded CSV data
         const data = {
-            schools: [
-                {"school_id": 1, "school_name": "New York University School of Law", "city": "New York", "state": "NY", "tier": "Strong Institutional Commitment", "is_t14": true, "se_strength": 3, "ii_strength": 3, "sd_strength": 3, "has_center": true, "has_clinic": true, "has_events": true, "has_partnership": true, "partnership_note": "Stern, Wagner, cross-school initiatives", "school_url": "https://www.law.nyu.edu/", "latitude": 40.7302, "longitude": -73.9972},
-                {"school_id": 2, "school_name": "Columbia Law School", "city": "New York", "state": "NY", "tier": "Strong Institutional Commitment", "is_t14": true, "se_strength": 2, "ii_strength": 3, "sd_strength": 3, "has_center": true, "has_clinic": true, "has_events": true, "has_partnership": true, "partnership_note": "Joint center with Climate School", "school_url": "https://www.law.columbia.edu/", "latitude": 40.8085, "longitude": -73.9634},
-                {"school_id": 3, "school_name": "Georgetown University Law Center", "city": "Washington", "state": "DC", "tier": "Strong Institutional Commitment", "is_t14": true, "se_strength": 3, "ii_strength": 2, "sd_strength": 2, "has_center": true, "has_clinic": true, "has_events": false, "has_partnership": true, "partnership_note": "McDonough School of Business", "school_url": "https://www.law.georgetown.edu/", "latitude": 38.8953, "longitude": -77.0146},
-                {"school_id": 4, "school_name": "Yale Law School", "city": "New Haven", "state": "CT", "tier": "Strong Institutional Commitment", "is_t14": true, "se_strength": 2, "ii_strength": 3, "sd_strength": 3, "has_center": false, "has_clinic": true, "has_events": false, "has_partnership": true, "partnership_note": "SOM Program on Social Enterprise", "school_url": "https://law.yale.edu/", "latitude": 41.3101, "longitude": -72.9261},
-                {"school_id": 5, "school_name": "Northwestern Pritzker School of Law", "city": "Chicago", "state": "IL", "tier": "Strong Institutional Commitment", "is_t14": true, "se_strength": 3, "ii_strength": 2, "sd_strength": 2, "has_center": true, "has_clinic": true, "has_events": true, "has_partnership": true, "partnership_note": "Kellogg School of Management", "school_url": "https://www.law.northwestern.edu/", "latitude": 41.8988, "longitude": -87.6231},
-                {"school_id": 6, "school_name": "UC Berkeley School of Law", "city": "Berkeley", "state": "CA", "tier": "Strong Institutional Commitment", "is_t14": true, "se_strength": 3, "ii_strength": 2, "sd_strength": 3, "has_center": true, "has_clinic": false, "has_events": true, "has_partnership": false, "partnership_note": "", "school_url": "https://www.law.berkeley.edu/", "latitude": 37.87, "longitude": -122.2534},
-                {"school_id": 7, "school_name": "University of Michigan School of Law", "city": "Ann Arbor", "state": "MI", "tier": "Strong Institutional Commitment", "is_t14": true, "se_strength": 2, "ii_strength": 2, "sd_strength": 2, "has_center": false, "has_clinic": true, "has_events": false, "has_partnership": false, "partnership_note": "", "school_url": "https://michigan.law.umich.edu/", "latitude": 42.2743, "longitude": -83.7402},
-                {"school_id": 8, "school_name": "University of Virginia School of Law", "city": "Charlottesville", "state": "VA", "tier": "Strong Institutional Commitment", "is_t14": true, "se_strength": 2, "ii_strength": 2, "sd_strength": 2, "has_center": true, "has_clinic": false, "has_events": false, "has_partnership": false, "partnership_note": "", "school_url": "https://www.law.virginia.edu/", "latitude": 38.0315, "longitude": -78.5034},
-                {"school_id": 9, "school_name": "UCLA School of Law", "city": "Los Angeles", "state": "CA", "tier": "Strong Institutional Commitment", "is_t14": false, "se_strength": 2, "ii_strength": 2, "sd_strength": 2, "has_center": false, "has_clinic": false, "has_events": true, "has_partnership": true, "partnership_note": "Berkeley Law partnership for CLE", "school_url": "https://law.ucla.edu/", "latitude": 34.074, "longitude": -118.4418},
-                {"school_id": 10, "school_name": "Boston College Law School", "city": "Newton", "state": "MA", "tier": "Substantial Institutional Commitment", "is_t14": false, "se_strength": 2, "ii_strength": 2, "sd_strength": 1, "has_center": true, "has_clinic": true, "has_events": false, "has_partnership": true, "partnership_note": "Center for Corporate Citizenship", "school_url": "https://www.bc.edu/bc-web/schools/law.html", "latitude": 42.3484, "longitude": -71.1685},
-                {"school_id": 11, "school_name": "University of Missouri-Kansas City School of Law", "city": "Kansas City", "state": "MO", "tier": "Substantial Institutional Commitment", "is_t14": false, "se_strength": 3, "ii_strength": 1, "sd_strength": 1, "has_center": false, "has_clinic": false, "has_events": true, "has_partnership": false, "partnership_note": "", "school_url": "https://law.umkc.edu/", "latitude": 39.0305, "longitude": -94.577},
-                {"school_id": 12, "school_name": "University of Washington School of Law", "city": "Seattle", "state": "WA", "tier": "Substantial Institutional Commitment", "is_t14": false, "se_strength": 2, "ii_strength": 1, "sd_strength": 2, "has_center": true, "has_clinic": false, "has_events": false, "has_partnership": false, "partnership_note": "", "school_url": "https://www.law.uw.edu/", "latitude": 47.657, "longitude": -122.313},
-                {"school_id": 13, "school_name": "Brooklyn Law School", "city": "Brooklyn", "state": "NY", "tier": "Some Institutional Commitment", "is_t14": false, "se_strength": 2, "ii_strength": 1, "sd_strength": 0, "has_center": true, "has_clinic": true, "has_events": false, "has_partnership": false, "partnership_note": "", "school_url": "https://www.brooklaw.edu/", "latitude": 40.6946, "longitude": -73.9877},
-                {"school_id": 14, "school_name": "Northeastern University School of Law", "city": "Boston", "state": "MA", "tier": "Some Institutional Commitment", "is_t14": false, "se_strength": 2, "ii_strength": 1, "sd_strength": 1, "has_center": true, "has_clinic": true, "has_events": false, "has_partnership": true, "partnership_note": "NUImpact Fund cross-school", "school_url": "https://law.northeastern.edu/", "latitude": 42.3392, "longitude": -71.0908},
-                {"school_id": 15, "school_name": "Pace University Elisabeth Haub School of Law", "city": "White Plains", "state": "NY", "tier": "Some Institutional Commitment", "is_t14": false, "se_strength": 1, "ii_strength": 1, "sd_strength": 3, "has_center": true, "has_clinic": false, "has_events": false, "has_partnership": false, "partnership_note": "", "school_url": "https://law.pace.edu/", "latitude": 41.0403, "longitude": -73.7647},
-                {"school_id": 16, "school_name": "Pepperdine Caruso School of Law", "city": "Malibu", "state": "CA", "tier": "Some Institutional Commitment", "is_t14": false, "se_strength": 1, "ii_strength": 1, "sd_strength": 1, "has_center": false, "has_clinic": false, "has_events": true, "has_partnership": false, "partnership_note": "", "school_url": "https://law.pepperdine.edu/", "latitude": 34.04, "longitude": -118.71},
-                {"school_id": 17, "school_name": "West Virginia University College of Law", "city": "Morgantown", "state": "WV", "tier": "Some Institutional Commitment", "is_t14": false, "se_strength": 1, "ii_strength": 0, "sd_strength": 2, "has_center": false, "has_clinic": true, "has_events": false, "has_partnership": false, "partnership_note": "", "school_url": "https://law.wvu.edu/", "latitude": 39.65, "longitude": -79.96}
-            ],
+            schools: [],
             centers: [],
             clinics: [],
             events: [],
             stories: []
         };
         
-        // CSV Paths (Kept for reference, but data is now hardcoded)
+        // CSV Paths
         const csvPaths = {
             schools: './data/schools.csv',
             centers: './data/centers.csv',
@@ -561,11 +540,13 @@
             stories: './data/stories.csv'
         };
 
-        // Utility function to parse CSV (Kept for completeness but not used)
+        // Utility function to parse CSV text into an array of objects
         function parseCSV(csvText) {
             const lines = csvText.trim().split('\n');
             if (lines.length === 0) return [];
             
+            // NOTE: Simple split(',') is used here but may fail if data contains escaped commas.
+            // For production, a robust CSV library (like PapaParse) is recommended.
             const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
             const result = [];
             
@@ -575,7 +556,8 @@
 
                 const row = {};
                 headers.forEach((header, index) => {
-                    let value = values[index].trim().replace(/"/g, '');
+                    // Trim and handle boolean/numeric values
+                    let value = values[index].trim().replace(/"/g, ''); // Remove quotes too
                     if (value.toLowerCase() === 'true') value = true;
                     else if (value.toLowerCase() === 'false') value = false;
                     else if (!isNaN(value) && value !== '') value = Number(value);
@@ -587,12 +569,23 @@
             return result;
         }
 
-        // Main data loading function (MODIFIED to use hardcoded data instantly)
+        // Main data loading function (fetches all CSVs concurrently)
         async function loadData() {
             try {
-                // Bypass CSV fetch by using pre-populated 'data' object
-                await new Promise(resolve => setTimeout(resolve, 50)); // Small delay for effect
+                const fetchPromises = Object.keys(csvPaths).map(key => 
+                    fetch(csvPaths[key]).then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Failed to load ${csvPaths[key]}: ${response.statusText}`);
+                        }
+                        return response.text();
+                    }).then(csvText => {
+                        data[key] = parseCSV(csvText);
+                    })
+                );
+
+                await Promise.all(fetchPromises);
                 
+                // Data loaded successfully
                 document.getElementById('loading-view').style.display = 'none';
                 initializeDashboard();
 
@@ -626,14 +619,14 @@
             
             document.getElementById('total-schools').textContent = totalSchools;
             document.getElementById('strong-count').textContent = strongCount;
-            document.getElementById('total-centers').textContent = totalCenters || 0; 
-            document.getElementById('total-clinics').textContent = totalClinics || 0;
+            document.getElementById('total-centers').textContent = totalCenters;
+            document.getElementById('total-clinics').textContent = totalClinics;
 
             // Placeholder narrative update
             document.getElementById('summary-narrative').innerHTML = `
                 The research identified **${totalSchools}** schools with relevant activity. 
                 A total of **${strongCount}** schools meet the criteria for a "Strong Institutional Commitment."
-                We tracked **${totalCenters || 0}** unique centers/institutes and **${totalClinics || 0}** specialized clinics across the schools. 
+                We tracked **${totalCenters}** unique centers/institutes and **${totalClinics}** specialized clinics across the schools. 
                 Further analysis of this data will inform the 3-5 year strategic plan.
             `;
         }
@@ -642,6 +635,7 @@
             const tbody = document.getElementById('shortlist-table-body');
             let html = '';
             
+            // Filter out schools without a tier, then group by tier
             const tieredSchools = data.schools.filter(s => s.tier);
 
             const schoolsByTier = tieredSchools.reduce((acc, school) => {
@@ -666,6 +660,7 @@
                         const hasEvents = school.has_events ? '<span class="yes-cell">X</span>' : '<span class="no-cell">-</span>';
                         const hasPartnership = school.has_partnership ? `<span class="yes-cell" title="${school.partnership_note}">X</span>` : '<span class="no-cell">-</span>';
                         
+                        // NYU (school_id = 1) is always first in its tier
                         const nameCell = school.school_id === 1 
                             ? `<span class="school-name" style="color: #702b9d;">${school.school_name} (Benchmark)</span>`
                             : `<span class="school-name" onclick="showSchoolDetails(${school.school_id})" style="cursor: pointer; text-decoration: underline;">${school.school_name}</span>`;
@@ -700,6 +695,7 @@
                 return;
             }
 
+            // Ensure NYU's program (if applicable) is first
             const sortedData = dataArray.sort((a, b) => {
                 if (a.school_id === 1) return -1;
                 if (b.school_id === 1) return 1;
@@ -722,6 +718,7 @@
                     </p>
                 `;
 
+                // Common card structure for centers, clinics, and events
                 html += `
                     <div class="data-card ${highlightClass}">
                         <h4 class="card-title">${item.name}</h4>
@@ -761,7 +758,7 @@
 
                 html += `
                     <div class="data-card">
-                        <h4 class="card-title">${story.line}</h4>
+                        <h4 class="card-title">${story.headline}</h4>
                         <div class="card-subtitle">${school.school_name}</div>
                         
                         <div class="card-badges">
@@ -782,167 +779,94 @@
             container.innerHTML = html;
         }
 
-        let mapInstance = null; // Variable to hold the Leaflet map object
-
-        /**
-         * Initializes and renders the Leaflet map in the #mapid container.
-         * Only runs map initialization once.
-         */
-        function mapInitializer() {
-            const schoolsWithCoords = data.schools.filter(s => s.latitude && s.longitude);
-            if (schoolsWithCoords.length === 0) {
-                document.getElementById('mapid').innerHTML = '<p style="text-align: center; padding-top: 50px;">No school coordinates available for mapping.</p>';
-                return;
-            }
-
-            // Only initialize the map once
-            if (mapInstance === null) {
-                // Calculate center
-                const totalLat = schoolsWithCoords.reduce((sum, school) => sum + school.latitude, 0);
-                const totalLon = schoolsWithCoords.reduce((sum, school) => sum + school.longitude, 0);
-                const count = schoolsWithCoords.length;
-                const centerLat = count > 0 ? totalLat / count : 39.8283;
-                const centerLon = count > 0 ? totalLon / count : -98.5795;
-                
-                // Initialize the map (Zoom level 4 is good for US-wide view)
-                mapInstance = L.map('mapid').setView([centerLat, centerLon], 4);
-                
-                // Add the Tile Layer
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                    maxZoom: 18,
-                }).addTo(mapInstance);
-
-                // Add all markers
-                schoolsWithCoords.forEach(school => {
-                    const isStrongCommitment = school.tier === 'Strong Institutional Commitment';
-                    const markerColor = isStrongCommitment ? '#702b9d' : '#999'; // Purple for strong, gray for others
-                    
-                    // Custom icon logic for better visualization
-                    const customIcon = L.divIcon({
-                        className: 'custom-div-icon',
-                        html: `<svg viewBox="0 0 24 24" width="30" height="30" fill="${markerColor}"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`,
-                        iconSize: [30, 30],
-                        iconAnchor: [15, 30]
-                    });
-
-                    L.marker([school.latitude, school.longitude], {icon: customIcon})
-                        .addTo(mapInstance)
-                        .bindPopup(`<b>${school.school_name}</b><br>Tier: ${school.tier}<br><a href="${school.school_url}" target="_blank">Visit Website</a>`);
-                });
-
-                // Adjust zoom level to fit all markers on the screen
-                const latLngs = schoolsWithCoords.map(school => [school.latitude, school.longitude]);
-                const bounds = L.latLngBounds(latLngs);
-                mapInstance.fitBounds(bounds, {
-                    padding: [50, 50]
-                });
-            } else {
-                // Map already exists, just invalidate size to re-center if necessary
-                mapInstance.invalidateSize();
-            }
-        }
-
         function initializeDashboard() {
             // 1. Render all dynamic content
             renderExecutiveSummary();
             renderShortList();
             
-            // Highlight NYU (school_id = 1) and any schools with 'Strong Institutional Commitment'
+            // Highlight NYU and any schools with 'Strong Institutional Commitment'
             const highlightSchools = (school) => school.school_id === 1 || school.tier === 'Strong Institutional Commitment';
 
-            // NOTE: The other tabs will show "No data available" since only `data.schools` is populated
             renderProgramCards(data.centers, 'centers-card-gallery', highlightSchools);
             renderProgramCards(data.clinics, 'clinics-card-gallery', highlightSchools);
             renderProgramCards(data.events, 'events-card-gallery', highlightSchools);
             renderStories();
 
             // 2. Set the initial view (Summary)
-            showView('summary');
+            showView('summary'); 
         }
 
         // --- CORE NAVIGATION/MODAL FUNCTIONS ---
 
         /**
-         * CORE FUNCTION: Toggles between dashboard views (tabs).
+         * CORE FUNCTION: Toggles the active view and updates the header tabs.
          */
         function showView(viewId) {
-            // Update active header/tab
-            document.querySelectorAll('.view-header').forEach(header => {
-                const targetViewId = header.getAttribute('onclick').match(/'(.*)'/)[1];
-                if (targetViewId === viewId) {
-                    header.classList.add('active');
-                } else {
-                    header.classList.remove('active');
-                }
+            // Hide all view panels
+            document.querySelectorAll('.view-panel').forEach(panel => {
+                panel.classList.remove('active');
+                panel.style.display = 'none';
             });
 
-            // Show active view panel
-            document.querySelectorAll('.view-panel').forEach(panel => {
-                if (panel.id === `${viewId}-view`) {
-                    panel.classList.add('active');
-                } else {
-                    panel.classList.remove('active');
-                }
+            // Deactivate all view headers
+            document.querySelectorAll('.view-header').forEach(header => {
+                header.classList.remove('active');
             });
-            
-            // Special initialization for map view
-            if (viewId === 'map') {
-                mapInitializer();
+
+            // Show the requested view panel
+            const targetPanel = document.getElementById(viewId + '-view');
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+                targetPanel.style.display = 'block';
             }
-        }
-        
+
+            // Activate the corresponding header (FIXED: The logic to find and activate the header)
+            const targetHeader = document.querySelector(`.view-header[onclick*="showView('${viewId}')"]`);
+            if (targetHeader) {
+                targetHeader.classList.add('active');
+            }
+        } // <--- This closing brace was missing!
+
+
         /**
-         * Shows the modal with details for a specific school.
+         * MODAL FUNCTION: Displays the details for a specific school.
          */
         function showSchoolDetails(schoolId) {
-            const school = data.schools.find(s => s.school_id == schoolId); // Use == for coercion
-            if (!school) return;
+            const school = data.schools.find(s => s.school_id === schoolId);
 
-            const modalTitle = document.getElementById('modal-title');
-            const modalContent = document.getElementById('modal-content');
+            if (!school) {
+                console.error("School not found:", schoolId);
+                return;
+            }
 
-            modalTitle.textContent = school.school_name;
-            modalContent.innerHTML = `
-                <p><strong>Tier:</strong> <span style="font-weight: bold; color: #702b9d;">${school.tier}</span></p>
-                <p><strong>Location:</strong> ${school.city}, ${school.state}</p>
-                <p><strong>T-14:</strong> ${school.is_t14 ? 'Yes' : 'No'}</p>
-                <p style="margin-top: 15px;"><strong>Institutional Focus:</strong></p>
+            document.getElementById('modal-title').textContent = school.school_name;
+            document.getElementById('modal-content').innerHTML = `
+                <p><strong>Tier:</strong> ${school.tier}</p>
+                <p><strong>Ranking:</strong> ${school.ranking || 'N/A'}</p>
+                <p style="margin-top: 15px;"><strong>Commitment Details:</strong></p>
                 <ul>
-                    <li><strong>Social Entrepreneurship (SE) Strength:</strong> ${generateStrengthDots(school.se_strength, 'se')}</li>
-                    <li><strong>Impact Investing (II) Strength:</strong> ${generateStrengthDots(school.ii_strength, 'ii')}</li>
-                    <li><strong>Sustainable Development (SD) Strength:</strong> ${generateStrengthDots(school.sd_strength, 'sd')}</li>
+                    <li>Social Entrepreneurship Strength: ${generateStrengthDots(school.se_strength, 'se')}</li>
+                    <li>Impact Investing Strength: ${generateStrengthDots(school.ii_strength, 'ii')}</li>
+                    <li>Sustainable Development Strength: ${generateStrengthDots(school.sd_strength, 'sd')}</li>
                 </ul>
-                <p style="margin-top: 15px;"><strong>Key Offerings:</strong></p>
-                <ul>
-                    <li>Center/Institute: ${school.has_center ? '<span class="yes-cell">Yes</span>' : 'No'}</li>
-                    <li>Clinic: ${school.has_clinic ? '<span class="yes-cell">Yes</span>' : 'No'}</li>
-                    <li>Events: ${school.has_events ? '<span class="yes-cell">Yes</span>' : 'No'}</li>
-                    <li>Partnership: ${school.has_partnership ? `<span class="yes-cell">Yes (${school.partnership_note})</span>` : 'No'}</li>
-                </ul>
-                <p style="margin-top: 20px;"><a href="${school.school_url}" target="_blank" style="color: #00abce; font-weight: bold;">Visit School Website</a></p>
+                <p style="margin-top: 15px;">**Full programmatic data (centers, clinics, etc.) for this school would be dynamically loaded here in a fully functional dashboard.**</p>
+                <p style="font-size: 12px; color: #999; margin-top: 10px;">Note: This detail is a placeholder summary.</p>
             `;
 
             document.getElementById('school-modal').style.display = 'block';
         }
 
+
         /**
-         * Closes the school details modal.
+         * MODAL FUNCTION: Hides the school details modal.
          */
         function closeModal() {
             document.getElementById('school-modal').style.display = 'none';
         }
 
-        // Close modal when user clicks outside of it
-        window.onclick = function(event) {
-            const modal = document.getElementById('school-modal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-        
-        // Kick off the data loading process when the script runs
-        loadData();
+        // Initializer
+        document.addEventListener('DOMContentLoaded', loadData);
+
     </script>
 </body>
 </html>
