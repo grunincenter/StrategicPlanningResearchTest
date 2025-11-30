@@ -377,7 +377,7 @@
             cursor: pointer;
         }
         #mapid {
-            height: 600px;
+            height: 500px;
             width: 100%;
         }
     </style>
@@ -516,13 +516,15 @@
     </div> 
     
     <div id="school-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title" style="color: #330662; border-bottom: 2px solid #00abce; padding-bottom: 10px;">School Details</h2>
+            <div id="modal-content" style="margin-top: 15px;">
+                <p>This modal will display detailed information when a school name is clicked.</p>
+            </div>
         </div>
+    </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20n6aJ6wD2FjLzUaD9n7rW/K0M1z/0l9G8Z6g3V/h2Q="
-        crossorigin=""></script>
-    
-    <script src="map_script.js"></script>
     <script>
         // Data storage object for all loaded CSV data
         const data = {
@@ -803,33 +805,33 @@
         /**
          * CORE FUNCTION: Toggles the active view and updates the header tabs.
          */
-       // ... (Your existing JavaScript code before showView) ...
+        function showView(viewId) {
+            // Hide all view panels
+            document.querySelectorAll('.view-panel').forEach(panel => {
+                panel.classList.remove('active');
+                panel.style.display = 'none';
+            });
 
-        /**
-         * CORE FUNCTION: Toggles the active view and updates the header tabs.
-         */
-        function showView(viewId) {
-            // Hide all view panels
-            document.querySelectorAll('.view-panel').forEach(panel => {
-                panel.classList.remove('active');
-            });
+            // Deactivate all view headers
+            document.querySelectorAll('.view-header').forEach(header => {
+                header.classList.remove('active');
+            });
 
-            // Activate the correct view panel
-            document.getElementById(viewId + '-view').classList.add('active');
+            // Show the requested view panel
+            const targetPanel = document.getElementById(viewId + '-view');
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+                targetPanel.style.display = 'block';
+            }
 
-            // Update tab headers
-            document.querySelectorAll('.view-header').forEach(header => {
-                header.classList.remove('active');
-            });
-            document.querySelector(`.view-header[onclick="showView('${viewId}')"]`).classList.add('active');
+            // Activate the corresponding header (FIXED: The logic to find and activate the header)
+            const targetHeader = document.querySelector(`.view-header[onclick*="showView('${viewId}')"]`);
+            if (targetHeader) {
+                targetHeader.classList.add('active');
+            }
+        } // <--- This closing brace was missing!
 
-            // 🌟 CRITICAL FIX: Tell the map to check its size after its container becomes visible.
-            if (viewId === 'map' && typeof map !== 'undefined') {
-                setTimeout(() => {
-                    map.invalidateSize();
-                }, 100); 
-            }
-        } 
+
         /**
          * MODAL FUNCTION: Displays the details for a specific school.
          */
@@ -872,7 +874,4 @@
     </script>
 </body>
 </html>
-
-
-
 
