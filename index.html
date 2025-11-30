@@ -516,15 +516,13 @@
     </div> 
     
     <div id="school-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 id="modal-title" style="color: #330662; border-bottom: 2px solid #00abce; padding-bottom: 10px;">School Details</h2>
-            <div id="modal-content" style="margin-top: 15px;">
-                <p>This modal will display detailed information when a school name is clicked.</p>
-            </div>
         </div>
-    </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20n6aJ6wD2FjLzUaD9n7rW/K0M1z/0l9G8Z6g3V/h2Q="
+        crossorigin=""></script>
+    
+    <script src="map_script.js"></script>
     <script>
         // Data storage object for all loaded CSV data
         const data = {
@@ -874,5 +872,6 @@
     </script>
 </body>
 </html>
+
 
 
