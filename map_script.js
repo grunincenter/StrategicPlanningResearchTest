@@ -23,7 +23,7 @@ const schoolData = [
 // --- 2. Initialize the Leaflet Map ---
 // Center the map roughly on the US and set a starting zoom level (4 is good for the US)
 // 'map' here must match the ID of the div in your index.html
-const map = L.map('map').setView([40.0, -98.0], 4);
+const map = L.map('mapid').setView([40.0, -98.0], 4);
 
 // Add the tile layer (the actual map image tiles from OpenStreetMap)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
