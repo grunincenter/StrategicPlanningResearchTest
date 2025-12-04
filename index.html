@@ -613,29 +613,6 @@
             return html;
         }
 
-
-        // --- RENDERING FUNCTIONS ---
-
-        function renderExecutiveSummary() {
-            const totalSchools = data.schools.length;
-            const strongCount = data.schools.filter(s => s.tier === 'Strong Institutional Commitment').length;
-            const totalCenters = data.centers.length;
-            const totalClinics = data.clinics.length;
-            
-            document.getElementById('total-schools').textContent = totalSchools;
-            document.getElementById('strong-count').textContent = strongCount;
-            document.getElementById('total-centers').textContent = totalCenters;
-            document.getElementById('total-clinics').textContent = totalClinics;
-
-            // Placeholder narrative update
-            document.getElementById('summary-narrative').innerHTML = `
-                The research identified **${totalSchools}** schools with relevant activity. 
-                A total of **${strongCount}** schools meet the criteria for a "Strong Institutional Commitment."
-                We tracked **${totalCenters}** unique centers/institutes and **${totalClinics}** specialized clinics across the schools. 
-                Further analysis of this data will inform the 3-5 year strategic plan.
-            `;
-        }
-
         function renderShortList() {
             const tbody = document.getElementById('shortlist-table-body');
             let html = '';
@@ -875,6 +852,7 @@
     </script>
 </body>
 </html>
+
 
 
 
