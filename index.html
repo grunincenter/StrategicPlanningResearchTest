@@ -760,22 +760,6 @@
             
             container.innerHTML = html;
         }
-
-        function initializeDashboard() {
-            // 1. Render all dynamic content
-            renderExecutiveSummary();
-            renderShortList();
-            
-            // Highlight NYU and any schools with 'Strong Institutional Commitment'
-            const highlightSchools = (school) => school.school_id === 1 || school.tier === 'Strong Institutional Commitment';
-
-            renderProgramCards(data.centers, 'centers-card-gallery', highlightSchools);
-            renderProgramCards(data.clinics, 'clinics-card-gallery', highlightSchools);
-            renderProgramCards(data.events, 'events-card-gallery', highlightSchools);
-            renderStories();
-
-            // 2. Set the initial view (Summary)
-            showView('summary'); 
         }
 
         // --- CORE NAVIGATION/MODAL FUNCTIONS ---
@@ -852,6 +836,7 @@
     </script>
 </body>
 </html>
+
 
 
 
