@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grunin Center Competitive Landscape Dashboard (Strict Data)</title>
+    <title>Grunin Center Research Data Viewer</title>
     
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Load Brand Fonts -->
+    <!-- Load Brand Fonts: Montserrat (Sans for headers) and Frank Ruhl Libre (Serif for body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -27,7 +27,7 @@
                             blue: '#00abce',
                             green: '#73a535',
                             brown: '#925333',
-                            deep_violet: '#330662', // Card background/Darker
+                            deep_violet: '#330662',
                         },
                         nyu: {
                             violet: '#57068c', // Primary Header/Accent
@@ -39,31 +39,21 @@
         }
     </script>
     <style>
-        /* Custom styles to match the reference dashboard look and feel */
+        /* Custom styles for tab transitions and modal */
         body {
-            background-color: #f2f2f2; /* NYU Light Gray */
-            padding-bottom: 4rem;
+            background-color: #f2f2f2; 
         }
         .dashboard-container {
-            border-top: 8px solid #57068c; /* NYU Violet Top Border */
+            border-top: 8px solid #57068c; 
             min-height: 90vh;
         }
-        .filter-button.active {
-            background-color: #57068c !important; /* NYU Violet */
-            color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .tab-button.active {
+            border-bottom: 4px solid #00abce;
+            font-weight: 700;
+            color: #57068c;
         }
-        /* Custom scrollbar for better visual on table */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #00abce;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f2f2f2;
+        .data-table-row {
+            transition: background-color 0.15s ease;
         }
         .modal {
             transition: opacity 0.3s ease;
@@ -82,10 +72,10 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 pb-4 border-b border-grunin-blue">
             <div class="mb-4 md:mb-0">
                 <h1 class="text-3xl font-sans font-bold leading-tight text-nyu-violet">
-                    Competitive Landscape Dashboard
+                    Competitive Research Data Explorer
                 </h1>
-                <h2 class="text-lg font-sans font-medium text-grunin-blue tracking-wider">
-                    Tiered Short List of Institutional Commitment (Data from Visible Snippets Only)
+                <h2 id="current-tab-subtitle" class="text-lg font-sans font-medium text-grunin-blue tracking-wider">
+                    Short List of Competitive Institutions
                 </h2>
             </div>
             <div class="text-right text-sm font-sans">
@@ -94,80 +84,50 @@
             </div>
         </div>
 
-        <!-- Metric Cards -->
-        <div id="metric-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <!-- Card 1: Strong Tier -->
-            <div class="bg-grunin-deep_violet text-white p-6 rounded-lg shadow-xl">
-                <p class="text-sm font-sans font-medium uppercase opacity-80 mb-1">Strong Commitment</p>
-                <div class="flex justify-between items-center">
-                    <span id="count-strong" class="text-5xl font-sans font-extrabold text-grunin-green">0</span>
-                    <span class="text-sm font-serif italic text-right opacity-90">Schools with comprehensive,<br>cross-disciplinary programs.</span>
-                </div>
-            </div>
-
-            <!-- Card 2: Substantial Tier -->
-            <div class="bg-grunin-deep_violet text-white p-6 rounded-lg shadow-xl">
-                <p class="text-sm font-sans font-medium uppercase opacity-80 mb-1">Substantial Commitment</p>
-                <div class="flex justify-between items-center">
-                    <span id="count-substantial" class="text-5xl font-sans font-extrabold text-grunin-blue">0</span>
-                    <span class="text-sm font-serif italic text-right opacity-90">Schools with dedicated clinics<br>or major recurring events.</span>
-                </div>
-            </div>
-
-            <!-- Card 3: Some Tier -->
-            <div class="bg-grunin-deep_violet text-white p-6 rounded-lg shadow-xl">
-                <p class="text-sm font-sans font-medium uppercase opacity-80 mb-1">Some Commitment</p>
-                <div class="flex justify-between items-center">
-                    <span id="count-some" class="text-5xl font-sans font-extrabold text-grunin-brown">0</span>
-                    <span class="text-sm font-serif italic text-right opacity-90">Schools with minor, emerging<br>or ancillary activity.</span>
-                </div>
-            </div>
+        <!-- Tabs -->
+        <div class="flex border-b border-gray-300 mb-6">
+            <button id="tab-shortlist" onclick="changeTab('shortList')" class="tab-button active px-4 py-3 text-lg font-sans font-medium text-nyu-violet transition duration-150 hover:bg-nyu-light_gray">
+                Short List
+            </button>
+            <button id="tab-institutes" onclick="changeTab('institutes')" class="tab-button px-4 py-3 text-lg font-sans font-medium text-gray-500 transition duration-150 hover:bg-nyu-light_gray">
+                Institutes, Centers, & Programs
+            </button>
         </div>
+
+        <!-- Search Control -->
+        <input type="text" id="search-input" placeholder="Search the data..." 
+               class="w-full p-3 mb-6 border-2 border-nyu-violet rounded-lg font-serif shadow-inner focus:ring-2 focus:ring-grunin-blue focus:border-grunin-blue transition duration-150"
+               onkeyup="renderTable()">
         
-        <!-- Filter and Search Controls -->
-        <div class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4 mb-8">
-            <input type="text" id="search-input" placeholder="Search institution, center, or notes..." 
-                   class="flex-grow p-3 border-2 border-nyu-violet rounded-lg font-serif shadow-inner focus:ring-2 focus:ring-grunin-blue focus:border-grunin-blue transition duration-150">
-            
-            <div class="flex space-x-2">
-                <button onclick="filterTable('All')" class="filter-button p-3 rounded-lg bg-gray-200 text-black font-sans font-medium text-sm transition duration-150 hover:bg-nyu-violet/80 hover:text-white active">All Tiers</button>
-                <button onclick="filterTable('Strong')" class="filter-button p-3 rounded-lg bg-grunin-green/10 text-grunin-green font-sans font-medium text-sm transition duration-150 hover:bg-grunin-green hover:text-white">Strong</button>
-                <button onclick="filterTable('Substantial')" class="filter-button p-3 rounded-lg bg-grunin-blue/10 text-grunin-blue font-sans font-medium text-sm transition duration-150 hover:bg-grunin-blue hover:text-white">Substantial</button>
-                <button onclick="filterTable('Some')" class="filter-button p-3 rounded-lg bg-grunin-brown/10 text-grunin-brown font-sans font-medium text-sm transition duration-150 hover:bg-grunin-brown hover:text-white">Some</button>
-            </div>
+        <!-- Loading State -->
+        <div id="loading-state" class="text-center py-20">
+            <svg class="animate-spin mx-auto h-10 w-10 text-grunin-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="mt-4 text-gray-600 font-sans font-medium">Loading data from CSV files...</p>
         </div>
 
-        <!-- Data Table -->
-        <div class="overflow-x-auto shadow-xl rounded-lg border border-gray-200">
+        <!-- Data Table Container -->
+        <div id="table-container" class="overflow-x-auto shadow-xl rounded-lg border border-gray-200 hidden">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-grunin-deep_violet text-white">
-                    <tr>
-                        <th onclick="sortTable('Institution')" class="cursor-pointer px-6 py-3 text-left text-xs font-sans font-bold uppercase tracking-wider hover:bg-nyu-violet transition duration-150">
-                            Institution <span id="sort-Institution" class="text-gray-400"></span>
-                        </th>
-                        <th onclick="sortTable('Tier')" class="cursor-pointer px-6 py-3 text-left text-xs font-sans font-bold uppercase tracking-wider hover:bg-nyu-violet transition duration-150">
-                            Tier <span id="sort-Tier" class="text-gray-400"></span>
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-sans font-bold uppercase tracking-wider">
-                            Summary Notes (Short List Assessment)
-                        </th>
-                        <th class="px-6 py-3 text-center text-xs font-sans font-bold uppercase tracking-wider">
-                            Details
-                        </th>
+                    <tr id="table-header-row">
+                        <!-- Headers injected here -->
                     </tr>
                 </thead>
                 <tbody id="data-table-body" class="bg-white divide-y divide-gray-100">
-                    <!-- Data rows will be injected here by JavaScript -->
+                    <!-- Data rows will be injected here -->
                 </tbody>
             </table>
         </div>
 
         <div id="no-results" class="text-center py-12 text-xl font-serif text-gray-500 hidden">
-            No institutions match the current filter and search criteria.
+            No results found for the current search.
         </div>
     </div>
 
-    <!-- Detail Modal (for the "click in to go deeper" functionality) -->
+    <!-- Detail Modal (Short List Drill Down) -->
     <div id="detail-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70" onclick="hideModal()">
         <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
             <div class="p-6 md:p-8">
@@ -177,12 +137,12 @@
                 </div>
 
                 <div class="mt-4">
-                    <h4 class="text-lg font-sans font-semibold mb-3 text-grunin-deep_violet border-b border-grunin-blue/50 pb-1">Primary Short List Summary</h4>
-                    <p id="modal-summary" class="text-gray-700 mb-6 font-serif"></p>
+                    <h4 class="text-lg font-sans font-semibold mb-3 text-grunin-deep_violet border-b border-grunin-blue/50 pb-1">Full Short List Assessment</h4>
+                    <div id="modal-shortlist-detail" class="text-gray-700 space-y-3 font-serif mb-6"></div>
                     
-                    <h4 class="text-lg font-sans font-semibold mb-3 text-grunin-deep_violet border-b border-grunin-blue/50 pb-1">Institutes, Centers, & Programs (Secondary Data File)</h4>
+                    <h4 class="text-lg font-sans font-semibold mb-3 text-grunin-deep_violet border-b border-grunin-blue/50 pb-1">Related Institutes, Centers, & Programs</h4>
                     <div id="modal-centers-detail" class="space-y-4">
-                        <!-- Detailed centers from the secondary data will be injected here -->
+                        <p class="text-gray-500 italic">Loading related center data...</p>
                     </div>
                 </div>
             </div>
@@ -193,126 +153,210 @@
     </div>
 
     <script>
-        // --- 1. EMBEDDED SHORT LIST DATA (Derived ONLY from institutions visible in CSV snippets) ---
-        const shortListData = [
-            {
-                "Institution": "Columbia Law School",
-                "Tier": "Strong",
-                "Summary": "Exceptional commitment driven by the highly relevant Columbia Center on Sustainable Investment (CCSI) and engagement through the Columbia Startup Lab.",
-            },
-            {
-                "Institution": "New York University School of Law",
-                "Tier": "Substantial",
-                "Summary": "The home of the Grunin Center (our own) and the Guarini Center focusing on environmental, energy, and sustainable development law, demonstrating significant institutional focus.",
-            },
-            {
-                "Institution": "Georgetown University Law Center",
-                "Tier": "Substantial",
-                "Summary": "Significant commitment through the Social Enterprise & Nonprofit Law Clinic (mentioned in Clinics snippet) and the Georgetown Denny Center for Democratic Capitalism (mentioned in Institutes snippet).",
-            },
-            {
-                "Institution": "University of California, Berkeley School of Law",
-                "Tier": "Substantial",
-                "Summary": "Robust clinical offerings and strong focus on Sustainable Capitalism, ESG executive education, and relevant events (implied by multiple snippet entries).",
-            },
-            {
-                "Institution": "Boston College Law School",
-                "Tier": "Some",
-                "Summary": "Activity centered around the Program on Innovation and Entrepreneurship (PIE), which is broad but inclusive of social impact sectors. Commitment is ancillary to general entrepreneurship focus.",
-            },
-            {
-                "Institution": "Northwestern Pritzker School of Law",
-                "Tier": "Some",
-                "Summary": "Leverages the Donald Pritzker Entrepreneurship Law Center (DPELC). Focus is general entrepreneurship, with occasional social enterprise clients but no specialized program name.",
-            },
-            {
-                "Institution": "Albany Law School",
-                "Tier": "Some",
-                "Summary": "Mentioned as a potential short list inclusion in the Short List snippet; activity is tied to a broad Entrepreneurship Law concentration (Social Entrepreneurship and Law pathway).",
-            }
-        ];
-
-        // --- 2. EMBEDDED DETAILED CENTER DATA (Derived ONLY from centers visible in CSV snippets) ---
-        const detailedData = [
-            { "Institution": "Columbia Law School", "Center Name": "Columbia Center on Sustainable Investment", "Notes": "Partnership with Columbia Climate School, focusing on investment law and policy.", "Appeared in 2017 Research": "True" },
-            { "Institution": "New York University School of Law", "Center Name": "Grunin Center for Law and Social Entrepreneurship", "Notes": "A global leader in the field of law and social entrepreneurship (Launched in 2017).", "Appeared in 2017 Research": "False" },
-            { "Institution": "Georgetown University Law Center", "Center Name": "Georgetown Denny Center for Democratic Capitalism", "Notes": "The Center exists to reconcile the benefits of free market capitalism with the values and expectations of a democratic society.", "Appeared in 2017 Research": "True" },
-            { "Institution": "University of California, Berkeley School of Law", "Center Name": "Berkeley Center for Law, Business and the Economy (BCLBE)", "Notes": "Offers executive education in ESG and sustainable capitalism.", "Appeared in 2017 Research": "False" },
-            { "Institution": "Boston College Law School", "Center Name": "Boston College Program on Innovation and Entrepreneurship (PIE)", "Notes": "Program has a broad focus but is inclusive of social impact sectors.", "Appeared in 2017 Research": "True" },
-            { "Institution": "Northwestern Pritzker School of Law", "Center Name": "Donald Pritzker Entrepreneurship Law Center", "Notes": "One of the first comprehensive programs in the U.S. for transactional lawyers and start-up founders.", "Appeared in 2017 Research": "False" },
-            { "Institution": "Albany Law School", "Center Name": "Innovation and Entrepreneurship Program", "Notes": "Includes a 'Social Entrepreneurship and Law' concentration pathway.", "Appeared in 2017 Research": "False" },
-            
-            // Adding a clinic detail mentioned in Clinics snippet for a Substantial school
-            { "Institution": "Georgetown University Law Center", "Center Name": "Social Enterprise & Nonprofit Law Clinic", "Notes": "Part of the Transactional Law Clinic Collaborative (mentioned in Clinics snippet).", "Appeared in 2017 Research": "False" }
-        ];
-
-
-        // --- 3. GLOBAL STATE & CONFIGURATION ---
-
-        let currentFilter = 'All';
-        let currentSortColumn = 'Tier';
-        let currentSortDirection = 'desc'; // 'asc' for ascending, 'desc' for descending
-
-        const tierColorMap = {
-            'Strong': 'bg-grunin-green text-white',
-            'Substantial': 'bg-grunin-blue text-white',
-            'Some': 'bg-grunin-brown text-white'
+        // --- Configuration ---
+        const FILE_PATHS = {
+            shortList: "Short List CSV - Short List.csv",
+            institutes: "Institutes, Centers, & Programs CSV - Institutes, Centers, & Programs.csv"
         };
+        const MAX_RETRIES = 3;
+        const SHORT_LIST_COLUMNS_TO_DISPLAY = [
+            'Institution', 
+            'Institution Descriptions', 
+            'Centers and Clinics', 
+            'Relevant Centers, Institutes, & Programs', 
+            'Recurring symposia',
+            'Relevant clinic clients'
+        ];
+        const INSTITUTES_COLUMNS_TO_DISPLAY = [
+            'Institution', 
+            'Center Name', 
+            'Notes from Grunin Team', 
+            'Appeared in 2017 Research'
+        ];
+
+        // --- Global State ---
+        let allData = { shortList: [], institutes: [] };
+        let currentTab = 'shortList';
+        let currentSortColumn = null;
+        let currentSortDirection = 'asc';
         
-        // Define Tier order for consistent sorting (3=Strong, 1=Some)
-        const tierOrder = { 'Strong': 3, 'Substantial': 2, 'Some': 1 };
-
-
-        // --- 4. HELPER FUNCTIONS ---
+        // --- Core Data Handling Functions ---
 
         /**
-         * Renders the data table based on current state (filter, search, sort).
-         * @param {Array} data The data array to render (shortListData).
+         * Simple CSV parser that handles header row and quote-encapsulated values.
+         * @param {string} csv The raw CSV text.
+         * @returns {Array<Object>} Array of objects representing the CSV rows.
          */
-        function renderTable(data) {
+        function parseCSV(csv) {
+            const lines = csv.split(/\r\n|\n/);
+            if (lines.length < 1) return [];
+
+            // Simple handling for the header row which contains messy commas
+            const rawHeaders = lines[0].split(',');
+            const headers = rawHeaders.map(h => h.trim().replace(/['"]+/g, '').replace(/[^a-zA-Z0-9_\s,]/g, '').trim());
+
+            const data = [];
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i];
+                if (!line.trim()) continue;
+
+                // Simple regex split for values, respecting quoted strings
+                const values = line.match(/(?:\"([^\"]*(?:\"\"[^\"]*)*)\")|([^\,]+)/g);
+                if (!values) continue;
+                
+                const row = {};
+                for (let j = 0; j < headers.length && j < values.length; j++) {
+                    let val = values[j].trim();
+                    // Clean up quotes and handle the empty trailing columns common in the short list file
+                    if (val.startsWith('"') && val.endsWith('"')) {
+                        val = val.substring(1, val.length - 1).replace(/""/g, '"');
+                    }
+                    if (headers[j]) {
+                         // Simplify header names for data access (e.g., 'Relevant Centers, Institutes, & Programs' -> 'Relevant Centers, Institutes, & Programs')
+                         const key = headers[j];
+                         row[key] = val;
+                    }
+                }
+                data.push(row);
+            }
+            return data;
+        }
+
+        /**
+         * Fetches and parses a single CSV file with retries.
+         * @param {string} filePath The path to the CSV file.
+         * @returns {Promise<Array<Object>>} Parsed data.
+         */
+        async function fetchFile(filePath) {
+            for (let i = 0; i < MAX_RETRIES; i++) {
+                try {
+                    const response = await fetch(filePath);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const text = await response.text();
+                    return parseCSV(text);
+                } catch (error) {
+                    console.error(`Attempt ${i + 1} failed for ${filePath}:`, error);
+                    if (i === MAX_RETRIES - 1) throw new Error(`Failed to load data for ${filePath} after ${MAX_RETRIES} attempts.`);
+                    await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i))); // Exponential backoff (1s, 2s, 4s)
+                }
+            }
+        }
+
+        /**
+         * Loads all data files.
+         */
+        async function loadAllData() {
+            try {
+                const [shortList, institutes] = await Promise.all([
+                    fetchFile(FILE_PATHS.shortList),
+                    fetchFile(FILE_PATHS.institutes)
+                ]);
+                allData.shortList = shortList.filter(row => row.Institution); // Filter out rows without institution name
+                allData.institutes = institutes.filter(row => row.Institution);
+                
+                // Show content and hide loading
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('table-container').classList.remove('hidden');
+
+                // Initial render
+                renderTable();
+
+            } catch (error) {
+                console.error('Fatal data loading error:', error);
+                document.getElementById('loading-state').innerHTML = `<p class="mt-4 text-red-600 font-sans font-medium">
+                    Error loading data. Please ensure the CSV files are accessible. Details: ${error.message}
+                </p>`;
+            }
+        }
+
+        // --- UI Logic Functions ---
+
+        /**
+         * Changes the active tab and re-renders the table.
+         * @param {string} tabName 'shortList' or 'institutes'.
+         */
+        window.changeTab = function(tabName) {
+            currentTab = tabName;
+            
+            // Update button visual state
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active', 'text-gray-500'));
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            // Update subtitle
+            const subtitle = tabName === 'shortList' ? 'Short List of Competitive Institutions' : 'Institutes, Centers, & Programs Details';
+            document.getElementById('current-tab-subtitle').textContent = subtitle;
+
+            // Reset search input and sorting
+            document.getElementById('search-input').value = '';
+            currentSortColumn = null;
+            currentSortDirection = 'asc';
+
+            renderTable();
+        }
+
+        /**
+         * Handles table sorting logic.
+         * @param {string} column 
+         */
+        window.sortTable = function(column) {
+            if (currentSortColumn === column) {
+                currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSortColumn = column;
+                currentSortDirection = 'asc'; // Default sort to ascending for new column
+            }
+            renderTable();
+        }
+
+        /**
+         * Renders the data table based on current state (tab, search, sort).
+         */
+        window.renderTable = function() {
+            const data = allData[currentTab];
+            const columns = currentTab === 'shortList' ? SHORT_LIST_COLUMNS_TO_DISPLAY : INSTITUTES_COLUMNS_TO_DISPLAY;
             const tableBody = document.getElementById('data-table-body');
+            const tableHeaderRow = document.getElementById('table-header-row');
             const searchInput = document.getElementById('search-input').value.toLowerCase();
             const noResults = document.getElementById('no-results');
-            
+
             // 1. Filter Data
             let filteredData = data.filter(item => {
-                const tierMatch = currentFilter === 'All' || item.Tier === currentFilter;
-                
-                // Search across all fields, including the centers data for a deeper search experience
                 const searchMatch = searchInput === '' || 
                     Object.values(item).some(value => 
                         String(value).toLowerCase().includes(searchInput)
-                    ) || detailedData.filter(d => d.Institution === item.Institution).some(d => 
-                        Object.values(d).some(value => String(value).toLowerCase().includes(searchInput))
                     );
-
-                return tierMatch && searchMatch;
+                return searchMatch;
             });
 
             // 2. Sort Data
-            filteredData.sort((a, b) => {
-                let comparison = 0;
+            if (currentSortColumn) {
+                filteredData.sort((a, b) => {
+                    const aVal = String(a[currentSortColumn] || '').toLowerCase();
+                    const bVal = String(b[currentSortColumn] || '').toLowerCase();
+                    let comparison = 0;
 
-                if (currentSortColumn === 'Tier') {
-                    // Custom sort for Tier: Strong > Substantial > Some
-                    const aTierValue = tierOrder[a.Tier] || 0;
-                    const bTierValue = tierOrder[b.Tier] || 0;
-                    comparison = bTierValue - aTierValue; // Descending by default for Tier
-                    // Reverse if user manually clicked for ascending
-                    if (currentSortDirection === 'asc') comparison *= -1;
-                } else {
-                    // Default string comparison for other columns
-                    const aVal = String(a[currentSortColumn]).toLowerCase();
-                    const bVal = String(b[currentSortColumn]).toLowerCase();
                     if (aVal > bVal) comparison = 1;
                     else if (aVal < bVal) comparison = -1;
 
-                    if (currentSortDirection === 'desc') comparison *= -1;
-                }
-                return comparison;
-            });
+                    return currentSortDirection === 'asc' ? comparison : comparison * -1;
+                });
+            }
 
-            // 3. Render Rows
+            // 3. Render Headers
+            tableHeaderRow.innerHTML = columns.map(col => {
+                const isCurrentSort = col === currentSortColumn;
+                const sortIndicator = isCurrentSort ? (currentSortDirection === 'asc' ? ' ▲' : ' ▼') : '';
+                // Institution column is clickable on both tabs, others only on the list view
+                const isClickable = true; 
+
+                return `
+                    <th onclick="sortTable('${col}')" class="cursor-pointer px-6 py-3 text-left text-xs font-sans font-bold uppercase tracking-wider hover:bg-nyu-violet transition duration-150 whitespace-nowrap">
+                        ${col.replace(/_/g, ' ')} <span class="text-gray-400">${sortIndicator}</span>
+                    </th>
+                `;
+            }).join('');
+            
+            // 4. Render Rows
             tableBody.innerHTML = '';
             if (filteredData.length === 0) {
                 noResults.classList.remove('hidden');
@@ -321,62 +365,76 @@
             }
 
             filteredData.forEach(item => {
-                const tierClass = tierColorMap[item.Tier] || 'bg-gray-100';
+                const isShortList = currentTab === 'shortList';
+                const rowClass = isShortList ? 'cursor-pointer data-table-row hover:bg-nyu-light_gray' : 'data-table-row';
+                const clickHandler = isShortList ? `onclick="showDetails('${item.Institution.replace(/'/g, "\\'")}')"` : '';
                 
-                const row = `
-                    <tr class="hover:bg-nyu-light_gray transition duration-150 cursor-pointer" onclick="showDetails('${item.Institution}')">
-                        <td class="px-6 py-4 font-sans font-bold text-grunin-deep_violet align-top">${item.Institution}</td>
-                        <td class="px-6 py-4 align-top">
-                            <span class="inline-block px-3 py-1 text-xs font-sans font-bold rounded-full ${tierClass}">
-                                ${item.Tier.toUpperCase()}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-sm font-serif text-gray-700 align-top leading-relaxed">
-                            ${item.Summary}
-                        </td>
-                        <td class="px-6 py-4 text-center align-top">
-                            <button class="text-grunin-blue hover:text-nyu-violet font-sans font-medium text-sm">
-                                View Centers &rarr;
-                            </button>
-                        </td>
-                    </tr>
-                `;
+                const cells = columns.map(col => {
+                    let content = item[col] || '';
+                    if (isShortList && col === 'Institution') {
+                         content = `<span class="font-bold text-grunin-deep_violet">${content}</span><span class="text-grunin-blue ml-2">&rarr; Details</span>`;
+                    } else if (col === 'Appeared in 2017 Research') {
+                        const statusClass = content.toUpperCase() === 'TRUE' ? 'bg-grunin-green text-white' : 'bg-grunin-brown/50 text-white';
+                        content = `<span class="inline-block px-3 py-1 text-xs font-sans font-bold rounded-full ${statusClass}">${content.toUpperCase()}</span>`;
+                    }
+                    return `<td class="px-6 py-4 text-sm font-serif text-gray-700 align-top leading-relaxed">${content}</td>`;
+                }).join('');
+
+                const row = `<tr class="${rowClass}" ${clickHandler}>${cells}</tr>`;
                 tableBody.insertAdjacentHTML('beforeend', row);
             });
-            updateSortIndicators();
         }
 
         /**
-         * Shows the detail modal with combined data.
+         * Shows the detail modal for a Short List institution.
          * @param {string} institutionName 
          */
         window.showDetails = function(institutionName) {
-            const primaryItem = shortListData.find(item => item.Institution === institutionName);
-            // Filter secondary data to find all related centers
-            const secondaryItems = detailedData.filter(item => item.Institution === institutionName);
+            const primaryItem = allData.shortList.find(item => item.Institution === institutionName);
+            const secondaryItems = allData.institutes.filter(item => item.Institution === institutionName);
 
             document.getElementById('modal-institution-name').textContent = institutionName;
-            document.getElementById('modal-summary').textContent = primaryItem ? primaryItem.Summary : 'Summary not available in Short List.';
+            
+            // --- 1. Populate Short List Detail ---
+            const shortListDetailEl = document.getElementById('modal-shortlist-detail');
+            shortListDetailEl.innerHTML = '';
 
+            if (primaryItem) {
+                // Loop through all relevant Short List columns for a detailed view
+                SHORT_LIST_COLUMNS_TO_DISPLAY.forEach(key => {
+                    if (key !== 'Institution') {
+                        const value = primaryItem[key] || 'N/A';
+                        shortListDetailEl.insertAdjacentHTML('beforeend', `
+                            <div class="p-2 border-b border-gray-100">
+                                <p class="font-sans font-semibold text-grunin-deep_violet text-sm uppercase">${key.replace(/_/g, ' ')}</p>
+                                <p class="text-gray-700">${value}</p>
+                            </div>
+                        `);
+                    }
+                });
+            }
+
+            // --- 2. Populate Institutes & Centers Detail ---
             const centersDetailEl = document.getElementById('modal-centers-detail');
             centersDetailEl.innerHTML = '';
 
             if (secondaryItems.length > 0) {
                 secondaryItems.forEach(detail => {
-                    const appearedClass = detail['Appeared in 2017 Research'] === 'True' ? 'text-grunin-green' : 'text-gray-400';
+                    const appeared = detail['Appeared in 2017 Research'];
+                    const appearedClass = appeared && appeared.toUpperCase() === 'TRUE' ? 'text-grunin-green' : 'text-gray-400';
                     const detailHtml = `
                         <div class="border-b last:border-b-0 pb-3">
-                            <p class="font-sans font-semibold text-gray-800">${detail['Center Name']}</p>
-                            <p class="text-xs font-serif italic text-gray-600">${detail.Notes}</p>
+                            <p class="font-sans font-semibold text-gray-800">${detail['Center Name'] || 'Center Name N/A'}</p>
+                            <p class="text-xs font-serif italic text-gray-600">${detail['Notes from Grunin Team'] || 'No notes available.'}</p>
                             <p class="text-xs font-sans mt-1 ${appearedClass}">
-                                Research Status: ${detail['Appeared in 2017 Research'] === 'True' ? 'Mentioned in 2017 Research' : 'New/Updated Since 2017'}
+                                Research Status: ${appeared && appeared.toUpperCase() === 'TRUE' ? 'Mentioned in 2017 Research' : 'New/Updated Since 2017'}
                             </p>
                         </div>
                     `;
                     centersDetailEl.insertAdjacentHTML('beforeend', detailHtml);
                 });
             } else {
-                centersDetailEl.innerHTML = '<p class="text-gray-500 italic">No specific Institutes, Centers, or Programs found in the secondary dataset for this institution, based on the current data snippets.</p>';
+                centersDetailEl.innerHTML = '<p class="text-gray-500 italic">No specific Institutes, Centers, or Programs found in the secondary dataset for this institution.</p>';
             }
 
             document.getElementById('detail-modal').classList.remove('hidden');
@@ -389,80 +447,10 @@
             document.getElementById('detail-modal').classList.add('hidden');
         }
 
-        /**
-         * Updates the metrics cards (Strong, Substantial, Some counts).
-         */
-        function updateMetrics() {
-            const counts = shortListData.reduce((acc, item) => {
-                const tier = item.Tier.toLowerCase();
-                acc[tier] = (acc[tier] || 0) + 1;
-                return acc;
-            }, {});
-
-            document.getElementById('count-strong').textContent = counts['strong'] || 0;
-            document.getElementById('count-substantial').textContent = counts['substantial'] || 0;
-            document.getElementById('count-some').textContent = counts['some'] || 0;
-        }
-
-        /**
-         * Handles table sorting logic.
-         * @param {string} column 
-         */
-        window.sortTable = function(column) {
-            if (currentSortColumn === column) {
-                currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
-            } else {
-                currentSortColumn = column;
-                // Tier defaults to descending (Strong first), others to ascending
-                currentSortDirection = column === 'Tier' ? 'desc' : 'asc';
-            }
-            renderTable(shortListData);
-        }
-
-        /**
-         * Updates the visible sort arrows on column headers.
-         */
-        function updateSortIndicators() {
-            ['Institution', 'Tier'].forEach(col => {
-                const indicator = document.getElementById(`sort-${col}`);
-                if (indicator) {
-                    indicator.innerHTML = '';
-                    if (col === currentSortColumn) {
-                        indicator.textContent = currentSortDirection === 'asc' ? ' ▲' : ' ▼';
-                    }
-                }
-            });
-        }
-        
-        /**
-         * Handles tier filtering logic.
-         * @param {string} tier 
-         */
-        window.filterTable = function(tier) {
-            currentFilter = tier;
-
-            // Update button styles
-            document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            
-            renderTable(shortListData);
-        }
-
-        // --- 5. INITIALIZATION ---
+        // --- Initialization ---
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Initial sort settings
-            currentSortColumn = 'Tier';
-            currentSortDirection = 'desc'; 
-            
-            // Re-render when search input changes
-            document.getElementById('search-input').addEventListener('keyup', () => {
-                renderTable(shortListData);
-            });
-
-            // Initial load
-            updateMetrics();
-            filterTable('All'); // Initial render
+            loadAllData();
         });
         
     </script>
