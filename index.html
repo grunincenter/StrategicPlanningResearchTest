@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grunin Center Short List Dashboard</title>
+    <title>Grunin Center Competitive Landscape Dashboard (Strict Data)</title>
     
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -65,6 +65,13 @@
         ::-webkit-scrollbar-track {
             background: #f2f2f2;
         }
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        .modal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="font-serif">
@@ -78,8 +85,8 @@
                     Competitive Landscape Dashboard
                 </h1>
                 <h2 class="text-lg font-sans font-medium text-grunin-blue tracking-wider">
-                    Tiered Short List of Institutional Commitment
-                </h1>
+                    Tiered Short List of Institutional Commitment (Data from Visible Snippets Only)
+                </h2>
             </div>
             <div class="text-right text-sm font-sans">
                 <p class="font-bold uppercase tracking-widest text-grunin-deep_violet">Grunin Center for Law and Social Entrepreneurship</p>
@@ -141,11 +148,11 @@
                         <th onclick="sortTable('Tier')" class="cursor-pointer px-6 py-3 text-left text-xs font-sans font-bold uppercase tracking-wider hover:bg-nyu-violet transition duration-150">
                             Tier <span id="sort-Tier" class="text-gray-400"></span>
                         </th>
-                        <th onclick="sortTable('Centers')" class="cursor-pointer px-6 py-3 text-left text-xs font-sans font-bold uppercase tracking-wider hover:bg-nyu-violet transition duration-150">
-                            Centers & Clinics Cited <span id="sort-Centers" class="text-gray-400"></span>
-                        </th>
                         <th class="px-6 py-3 text-left text-xs font-sans font-bold uppercase tracking-wider">
-                            Consolidated Grunin Notes
+                            Summary Notes (Short List Assessment)
+                        </th>
+                        <th class="px-6 py-3 text-center text-xs font-sans font-bold uppercase tracking-wider">
+                            Details
                         </th>
                     </tr>
                 </thead>
@@ -160,72 +167,92 @@
         </div>
     </div>
 
-    <script>
-        // --- 1. EMBEDDED SHORT LIST DATA ---
-        // Data is sourced directly from the provided "Short List CSV.xlsx - Short List.csv" file.
-        const dashboardData = [
-  {
-    "Institution": "University of Pennsylvania Carey Law School",
-    "Tier": "Strong",
-    "Centers": "Business, Entrepreneurship, and Law Clinic | Center for Ethics and the Rule of Law (CERL)",
-    "Description": "The Legal Clinic has taken on clients for social enterprises and impact investing. | The center has an Environmental, Social, and Governance Initiative with some student opportunities."
-  },
-  {
-    "Institution": "Harvard Law School",
-    "Tier": "Strong",
-    "Centers": "Program on Corporate Governance | Institute for Global Law and Policy | Embankment Project for Inclusive Capitalism",
-    "Description": "HLS is host to the Embankment Project for Inclusive Capitalism (with Oxford), which has produced white papers on ESG. | The law school has a course \"Law and Regulation of Social Enterprises\" and a Social Enterprise Initiative at Harvard Business School."
-  },
-  {
-    "Institution": "Yale Law School",
-    "Tier": "Strong",
-    "Centers": "Yale Law School Global Health Justice Partnership | Collaboration for Research and Innovation in Social Enterprise (CRISTAL)",
-    "Description": "YLS offers numerous courses and clinical opportunities related to sustainable development and social justice. | The Law School has a deep collaboration with the Yale School of Management in this area."
-  },
-  {
-    "Institution": "Stanford Law School",
-    "Tier": "Strong",
-    "Centers": "Law and Policy Lab | Stanford Program on Social Entrepreneurship",
-    "Description": "Stanford's Law and Policy Lab often partners with the Stanford Social Innovation Review and other university-wide initiatives. | The law school has a dedicated program on social entrepreneurship which includes clinical and experiential components."
-  },
-  {
-    "Institution": "University of California, Berkeley School of Law",
-    "Tier": "Substantial",
-    "Centers": "Berkeley Center for Law, Business and the Economy (BCLBE) | Social Enterprise & Nonprofit Law Clinic",
-    "Description": "BCLBE hosts events and executive education focused on ESG and Sustainable Capitalism. | The dedicated clinic provides transactional legal services to non-profits and social enterprises."
-  },
-  {
-    "Institution": "Georgetown University Law Center",
-    "Tier": "Substantial",
-    "Centers": "Social Enterprise & Nonprofit Law Clinic | Georgetown Denny Center for Democratic Capitalism",
-    "Description": "The Denny Center focuses on the intersection of markets and societal values. | The clinic is part of the Transactional Law Clinic Collaborative, serving social enterprises in the DC area."
-  },
-  {
-    "Institution": "New York University School of Law",
-    "Tier": "Substantial",
-    "Centers": "Grunin Center for Law and Social Entrepreneurship | Frank J. Guarini Center on Environmental, Energy and Land Use Law",
-    "Description": "NYU is a leader in the field (our own center). | The Guarini Center offers relevant courses and hosts events on environmental and sustainable development topics."
-  },
-  {
-    "Institution": "Boston College Law School",
-    "Tier": "Some",
-    "Centers": "Boston College Program on Innovation and Entrepreneurship (PIE) | Entrepreneurship & Innovation Clinic",
-    "Description": "PIE has a broad focus but includes social impact sectors. | The clinic supports startups, some of which are social enterprises, but does not specialize in the area."
-  },
-  {
-    "Institution": "Northwestern Pritzker School of Law",
-    "Tier": "Some",
-    "Centers": "Donald Pritzker Entrepreneurship Law Center (DPELC)",
-    "Description": "The DPELC focuses primarily on transactional law for startups but has taken on some social enterprise clients in the past. | Commitment is more to general entrepreneurship than specifically social enterprise."
-  }
-];
+    <!-- Detail Modal (for the "click in to go deeper" functionality) -->
+    <div id="detail-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70" onclick="hideModal()">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <div class="p-6 md:p-8">
+                <div class="flex justify-between items-start pb-4 border-b border-gray-200">
+                    <h3 id="modal-institution-name" class="text-2xl font-sans font-bold text-nyu-violet">Institution Name</h3>
+                    <button onclick="hideModal()" class="text-gray-500 hover:text-gray-700 text-3xl leading-none font-light">&times;</button>
+                </div>
 
-        // --- 2. GLOBAL STATE ---
+                <div class="mt-4">
+                    <h4 class="text-lg font-sans font-semibold mb-3 text-grunin-deep_violet border-b border-grunin-blue/50 pb-1">Primary Short List Summary</h4>
+                    <p id="modal-summary" class="text-gray-700 mb-6 font-serif"></p>
+                    
+                    <h4 class="text-lg font-sans font-semibold mb-3 text-grunin-deep_violet border-b border-grunin-blue/50 pb-1">Institutes, Centers, & Programs (Secondary Data File)</h4>
+                    <div id="modal-centers-detail" class="space-y-4">
+                        <!-- Detailed centers from the secondary data will be injected here -->
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 bg-nyu-light_gray text-right rounded-b-lg">
+                <button onclick="hideModal()" class="px-4 py-2 bg-nyu-violet text-white font-sans font-medium rounded-lg hover:bg-nyu-violet/80 transition duration-150">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. EMBEDDED SHORT LIST DATA (Derived ONLY from institutions visible in CSV snippets) ---
+        const shortListData = [
+            {
+                "Institution": "Columbia Law School",
+                "Tier": "Strong",
+                "Summary": "Exceptional commitment driven by the highly relevant Columbia Center on Sustainable Investment (CCSI) and engagement through the Columbia Startup Lab.",
+            },
+            {
+                "Institution": "New York University School of Law",
+                "Tier": "Substantial",
+                "Summary": "The home of the Grunin Center (our own) and the Guarini Center focusing on environmental, energy, and sustainable development law, demonstrating significant institutional focus.",
+            },
+            {
+                "Institution": "Georgetown University Law Center",
+                "Tier": "Substantial",
+                "Summary": "Significant commitment through the Social Enterprise & Nonprofit Law Clinic (mentioned in Clinics snippet) and the Georgetown Denny Center for Democratic Capitalism (mentioned in Institutes snippet).",
+            },
+            {
+                "Institution": "University of California, Berkeley School of Law",
+                "Tier": "Substantial",
+                "Summary": "Robust clinical offerings and strong focus on Sustainable Capitalism, ESG executive education, and relevant events (implied by multiple snippet entries).",
+            },
+            {
+                "Institution": "Boston College Law School",
+                "Tier": "Some",
+                "Summary": "Activity centered around the Program on Innovation and Entrepreneurship (PIE), which is broad but inclusive of social impact sectors. Commitment is ancillary to general entrepreneurship focus.",
+            },
+            {
+                "Institution": "Northwestern Pritzker School of Law",
+                "Tier": "Some",
+                "Summary": "Leverages the Donald Pritzker Entrepreneurship Law Center (DPELC). Focus is general entrepreneurship, with occasional social enterprise clients but no specialized program name.",
+            },
+            {
+                "Institution": "Albany Law School",
+                "Tier": "Some",
+                "Summary": "Mentioned as a potential short list inclusion in the Short List snippet; activity is tied to a broad Entrepreneurship Law concentration (Social Entrepreneurship and Law pathway).",
+            }
+        ];
+
+        // --- 2. EMBEDDED DETAILED CENTER DATA (Derived ONLY from centers visible in CSV snippets) ---
+        const detailedData = [
+            { "Institution": "Columbia Law School", "Center Name": "Columbia Center on Sustainable Investment", "Notes": "Partnership with Columbia Climate School, focusing on investment law and policy.", "Appeared in 2017 Research": "True" },
+            { "Institution": "New York University School of Law", "Center Name": "Grunin Center for Law and Social Entrepreneurship", "Notes": "A global leader in the field of law and social entrepreneurship (Launched in 2017).", "Appeared in 2017 Research": "False" },
+            { "Institution": "Georgetown University Law Center", "Center Name": "Georgetown Denny Center for Democratic Capitalism", "Notes": "The Center exists to reconcile the benefits of free market capitalism with the values and expectations of a democratic society.", "Appeared in 2017 Research": "True" },
+            { "Institution": "University of California, Berkeley School of Law", "Center Name": "Berkeley Center for Law, Business and the Economy (BCLBE)", "Notes": "Offers executive education in ESG and sustainable capitalism.", "Appeared in 2017 Research": "False" },
+            { "Institution": "Boston College Law School", "Center Name": "Boston College Program on Innovation and Entrepreneurship (PIE)", "Notes": "Program has a broad focus but is inclusive of social impact sectors.", "Appeared in 2017 Research": "True" },
+            { "Institution": "Northwestern Pritzker School of Law", "Center Name": "Donald Pritzker Entrepreneurship Law Center", "Notes": "One of the first comprehensive programs in the U.S. for transactional lawyers and start-up founders.", "Appeared in 2017 Research": "False" },
+            { "Institution": "Albany Law School", "Center Name": "Innovation and Entrepreneurship Program", "Notes": "Includes a 'Social Entrepreneurship and Law' concentration pathway.", "Appeared in 2017 Research": "False" },
+            
+            // Adding a clinic detail mentioned in Clinics snippet for a Substantial school
+            { "Institution": "Georgetown University Law Center", "Center Name": "Social Enterprise & Nonprofit Law Clinic", "Notes": "Part of the Transactional Law Clinic Collaborative (mentioned in Clinics snippet).", "Appeared in 2017 Research": "False" }
+        ];
+
+
+        // --- 3. GLOBAL STATE & CONFIGURATION ---
+
         let currentFilter = 'All';
         let currentSortColumn = 'Tier';
-        let currentSortDirection = 'asc'; // 'asc' for ascending, 'desc' for descending
+        let currentSortDirection = 'desc'; // 'asc' for ascending, 'desc' for descending
 
-        // Tier to Color Map for visual consistency
         const tierColorMap = {
             'Strong': 'bg-grunin-green text-white',
             'Substantial': 'bg-grunin-blue text-white',
@@ -236,21 +263,11 @@
         const tierOrder = { 'Strong': 3, 'Substantial': 2, 'Some': 1 };
 
 
-        // --- 3. HELPER FUNCTIONS ---
-
-        /**
-         * Cleans up text data by replacing null/NaN with a user-friendly string.
-         * @param {string} text 
-         * @returns {string}
-         */
-        function cleanText(text) {
-            // Replaces "N/A" (from processing) or 'nan' (from CSV) with a clear note.
-            return (text === 'nan' || text === 'N/A' || !text) ? 'No dedicated programs listed.' : text.trim();
-        }
+        // --- 4. HELPER FUNCTIONS ---
 
         /**
          * Renders the data table based on current state (filter, search, sort).
-         * @param {Array} data The data array to render.
+         * @param {Array} data The data array to render (shortListData).
          */
         function renderTable(data) {
             const tableBody = document.getElementById('data-table-body');
@@ -261,9 +278,12 @@
             let filteredData = data.filter(item => {
                 const tierMatch = currentFilter === 'All' || item.Tier === currentFilter;
                 
+                // Search across all fields, including the centers data for a deeper search experience
                 const searchMatch = searchInput === '' || 
                     Object.values(item).some(value => 
                         String(value).toLowerCase().includes(searchInput)
+                    ) || detailedData.filter(d => d.Institution === item.Institution).some(d => 
+                        Object.values(d).some(value => String(value).toLowerCase().includes(searchInput))
                     );
 
                 return tierMatch && searchMatch;
@@ -296,7 +316,6 @@
             tableBody.innerHTML = '';
             if (filteredData.length === 0) {
                 noResults.classList.remove('hidden');
-                return;
             } else {
                 noResults.classList.add('hidden');
             }
@@ -304,30 +323,21 @@
             filteredData.forEach(item => {
                 const tierClass = tierColorMap[item.Tier] || 'bg-gray-100';
                 
-                // Centers are formatted as a pipe-separated list of tags
-                const centersHtml = cleanText(item.Centers).split(' | ').map(c => 
-                    // Use a check for the 'No dedicated programs listed' text to avoid tagging it
-                    c !== 'No dedicated programs listed.' ? 
-                        `<span class="inline-block bg-nyu-light_gray text-nyu-violet px-2 py-0.5 rounded-full text-xs mb-1 mr-1 font-sans font-medium">${c}</span>` :
-                        `<span class="text-gray-400 text-sm font-serif italic">${c}</span>`
-                ).join('');
-
-                // Notes are formatted with line breaks for readability
-                const notesHtml = cleanText(item.Description).replace(/ \| /g, '<br><br>');
-
                 const row = `
-                    <tr class="hover:bg-nyu-light_gray transition duration-150">
+                    <tr class="hover:bg-nyu-light_gray transition duration-150 cursor-pointer" onclick="showDetails('${item.Institution}')">
                         <td class="px-6 py-4 font-sans font-bold text-grunin-deep_violet align-top">${item.Institution}</td>
                         <td class="px-6 py-4 align-top">
                             <span class="inline-block px-3 py-1 text-xs font-sans font-bold rounded-full ${tierClass}">
                                 ${item.Tier.toUpperCase()}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-sm font-serif text-gray-700 align-top">
-                            ${centersHtml}
+                        <td class="px-6 py-4 text-sm font-serif text-gray-700 align-top leading-relaxed">
+                            ${item.Summary}
                         </td>
-                        <td class="px-6 py-4 text-xs font-serif italic text-gray-600 align-top leading-relaxed">
-                            ${notesHtml}
+                        <td class="px-6 py-4 text-center align-top">
+                            <button class="text-grunin-blue hover:text-nyu-violet font-sans font-medium text-sm">
+                                View Centers &rarr;
+                            </button>
                         </td>
                     </tr>
                 `;
@@ -337,10 +347,53 @@
         }
 
         /**
+         * Shows the detail modal with combined data.
+         * @param {string} institutionName 
+         */
+        window.showDetails = function(institutionName) {
+            const primaryItem = shortListData.find(item => item.Institution === institutionName);
+            // Filter secondary data to find all related centers
+            const secondaryItems = detailedData.filter(item => item.Institution === institutionName);
+
+            document.getElementById('modal-institution-name').textContent = institutionName;
+            document.getElementById('modal-summary').textContent = primaryItem ? primaryItem.Summary : 'Summary not available in Short List.';
+
+            const centersDetailEl = document.getElementById('modal-centers-detail');
+            centersDetailEl.innerHTML = '';
+
+            if (secondaryItems.length > 0) {
+                secondaryItems.forEach(detail => {
+                    const appearedClass = detail['Appeared in 2017 Research'] === 'True' ? 'text-grunin-green' : 'text-gray-400';
+                    const detailHtml = `
+                        <div class="border-b last:border-b-0 pb-3">
+                            <p class="font-sans font-semibold text-gray-800">${detail['Center Name']}</p>
+                            <p class="text-xs font-serif italic text-gray-600">${detail.Notes}</p>
+                            <p class="text-xs font-sans mt-1 ${appearedClass}">
+                                Research Status: ${detail['Appeared in 2017 Research'] === 'True' ? 'Mentioned in 2017 Research' : 'New/Updated Since 2017'}
+                            </p>
+                        </div>
+                    `;
+                    centersDetailEl.insertAdjacentHTML('beforeend', detailHtml);
+                });
+            } else {
+                centersDetailEl.innerHTML = '<p class="text-gray-500 italic">No specific Institutes, Centers, or Programs found in the secondary dataset for this institution, based on the current data snippets.</p>';
+            }
+
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+
+        /**
+         * Hides the detail modal.
+         */
+        window.hideModal = function() {
+            document.getElementById('detail-modal').classList.add('hidden');
+        }
+
+        /**
          * Updates the metrics cards (Strong, Substantial, Some counts).
          */
         function updateMetrics() {
-            const counts = dashboardData.reduce((acc, item) => {
+            const counts = shortListData.reduce((acc, item) => {
                 const tier = item.Tier.toLowerCase();
                 acc[tier] = (acc[tier] || 0) + 1;
                 return acc;
@@ -363,14 +416,14 @@
                 // Tier defaults to descending (Strong first), others to ascending
                 currentSortDirection = column === 'Tier' ? 'desc' : 'asc';
             }
-            renderTable(dashboardData);
+            renderTable(shortListData);
         }
 
         /**
          * Updates the visible sort arrows on column headers.
          */
         function updateSortIndicators() {
-            ['Institution', 'Tier', 'Centers'].forEach(col => {
+            ['Institution', 'Tier'].forEach(col => {
                 const indicator = document.getElementById(`sort-${col}`);
                 if (indicator) {
                     indicator.innerHTML = '';
@@ -392,10 +445,10 @@
             document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
             event.currentTarget.classList.add('active');
             
-            renderTable(dashboardData);
+            renderTable(shortListData);
         }
 
-        // --- 4. INITIALIZATION ---
+        // --- 5. INITIALIZATION ---
 
         document.addEventListener('DOMContentLoaded', () => {
             // Initial sort settings
@@ -404,7 +457,7 @@
             
             // Re-render when search input changes
             document.getElementById('search-input').addEventListener('keyup', () => {
-                renderTable(dashboardData);
+                renderTable(shortListData);
             });
 
             // Initial load
