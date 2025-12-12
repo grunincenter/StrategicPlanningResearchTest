@@ -1,844 +1,417 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strategic Planning Research Version 2 - Comparative Analysis</title>
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/SVSLyojsvWv9Ue8ExI="
-        crossorigin=""/>
-        <style>
-        /* --- General and Layout Styles --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grunin Center Short List Dashboard</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Brand Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        // --- Tailwind Configuration ---
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'], // Headers/UI
+                        serif: ['"Frank Ruhl Libre"', 'serif'], // Body Text
+                    },
+                    colors: {
+                        grunin: {
+                            blue: '#00abce',
+                            green: '#73a535',
+                            brown: '#925333',
+                            deep_violet: '#330662', // Card background/Darker
+                        },
+                        nyu: {
+                            violet: '#57068c', // Primary Header/Accent
+                            light_gray: '#f2f2f2',
+                        }
+                    }
+                }
+            }
         }
-
+    </script>
+    <style>
+        /* Custom styles to match the reference dashboard look and feel */
         body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-            color: #333;
+            background-color: #f2f2f2; /* NYU Light Gray */
+            padding-bottom: 4rem;
         }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 30px;
+        .dashboard-container {
+            border-top: 8px solid #57068c; /* NYU Violet Top Border */
+            min-height: 90vh;
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 3px solid #00abce;
-            padding-bottom: 20px;
-        }
-
-        .header h1 {
-            color: #330662;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            color: #330662;
-            font-size: 20px;
-            font-weight: normal;
-        }
-
-        /* --- View Controls (Tabs) --- */
-        .view-controls {
-            display: flex;
-            justify-content: center;
-            align-items: baseline;
-            gap: 10px;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
-            border-radius: 8px;
-            flex-wrap: wrap;
-        }
-
-        .view-header {
-            color: #999;
-            font-size: 14px;
-            font-weight: 500;
-            position: relative;
-            padding: 8px 10px;
-            cursor: pointer; 
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-
-        .view-header:hover:not(.active) {
-            color: #666;
-        }
-
-        .view-header.active {
-            color: #330662;
-            font-size: 16px;
-            font-weight: 700;
-            padding: 10px 15px;
-            background: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-left: 4px solid #702b9d;
-            cursor: default;
-        }
-
-        .view-header:not(.active)::after {
-            content: '|';
-            position: absolute;
-            right: -8px;
-            color: #ddd;
-        }
-
-        .view-header:last-child::after {
-            display: none;
-        }
-
-        .view-container {
-            min-height: 500px;
-        }
-
-        .view-panel {
-            display: none;
-            padding-top: 20px;
-        }
-
-        .view-panel.active {
-            display: block;
-        }
-        
-        /* --- Dynamic Loading & Error State --- */
-        .loading {
-            text-align: center;
-            padding: 50px;
-            font-size: 18px;
-            color: #702b9d;
-        }
-        
-        .error {
-            text-align: center;
-            padding: 50px;
-            font-size: 18px;
-            color: #cc3300;
-            background: #ffebeb;
-            border: 1px solid #cc3300;
-            border-radius: 5px;
-        }
-
-
-        /* --- Executive Summary Styles --- */
-        .executive-summary {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .summary-intro {
-            background: linear-gradient(135deg, #330662 0%, #702b9d 100%);
+        .filter-button.active {
+            background-color: #57068c !important; /* NYU Violet */
             color: white;
-            padding: 30px;
-            border-radius: 8px;
-            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
-        .summary-intro h2 {
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .summary-intro p {
-            font-size: 16px;
-            line-height: 1.6;
-            opacity: 0.95;
-            margin-bottom: 15px;
-        }
-
-        .metrics-bar {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #f9f9f9 0%, #e8f4f8 100%);
-            border-radius: 8px;
-            flex-wrap: wrap;
-            gap: 20px;
-            border: 1px solid #00abce;
-        }
-
-        .metric {
-            text-align: center;
-            flex: 1;
-            min-width: 120px;
-        }
-
-        .metric-value {
-            font-size: 32px;
-            font-weight: bold;
-            color: #330662;
-        }
-
-        .metric-label {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        /* --- Table/Card Styles (for all dynamic tabs) --- */
-        .data-table-container, .card-gallery {
-            overflow-x: auto;
-            margin-bottom: 30px; 
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        .data-table th, .data-table td {
-            padding: 10px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .data-table th {
-            background: #702b9d;
-            color: white;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 12px;
-            border-bottom: 3px solid #330662;
-            position: sticky;
-            top: 0;
-            white-space: nowrap;
-            vertical-align: top; 
-        }
-        
-        /* FIX: Style for the dynamically inserted tier headers in the shortlist table */
-        .data-table .commitment-header th {
-            background: #9d7cc4 !important; /* Lighter purple */
-            text-align: center;
-            position: static; /* Prevent tier headers from sticking with the main header */
-        }
-        /* Style for the checkmark/cross cells */
-        .data-table .yes-cell { color: #00abce; font-weight: bold; }
-        .data-table .no-cell { color: #ccc; }
-
-
-        /* --- Field Strength Dot Indicators --- */
-        .strength-indicator {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-        }
-        .dot {
+        /* Custom scrollbar for better visual on table */
+        ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
-            border-radius: 50%;
-            border: 1px solid #ccc;
-            opacity: 0.3;
         }
-        .dot.filled {
-            border: none;
-            opacity: 1;
+        ::-webkit-scrollbar-thumb {
+            background: #00abce;
+            border-radius: 4px;
         }
-        .dot.se-dot { background-color: #702b9d; } /* Purple */
-        .dot.ii-dot { background-color: #00abce; } /* Teal */
-        .dot.sd-dot { background-color: #FFD700; } /* Gold */
-        
-        /* --- Card Gallery (for Centers, Clinics, Events, Stories) --- */
-        .card-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 10px 0;
-        }
-
-        .data-card {
-            background: #fdfdfd;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-            position: relative;
-        }
-
-        .data-card.highlight {
-            border: 2px solid #702b9d;
-            box-shadow: 0 4px 12px rgba(112, 43, 157, 0.2);
-        }
-
-        .card-title {
-            font-size: 18px;
-            color: #330662;
-            margin-bottom: 5px;
-            border-bottom: 1px solid #e8e8e8;
-            padding-bottom: 5px;
-        }
-
-        .card-subtitle {
-            font-size: 14px;
-            color: #00abce;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .card-description {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 15px;
-        }
-        
-        .card-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 10px;
-        }
-        
-        .badge {
-            font-size: 10px;
-            padding: 4px 8px;
-            border-radius: 12px;
-            color: white;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        
-        .tier-badge { background-color: #702b9d; }
-        .category-badge { background-color: #333; }
-
-        .card-footer {
-            border-top: 1px solid #f0f0f0;
-            padding-top: 10px;
-            font-size: 12px;
-            color: #999;
-        }
-        
-        .card-footer a {
-            color: #00abce;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        /* --- Footer and Modal (Retained) --- */
-        .footer-note {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-            text-align: center;
-            font-size: 11px;
-            color: #999;
-            font-style: italic;
-        }
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 10;
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.4); 
-            padding-top: 60px;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto; 
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; 
-            max-width: 600px;
-            border-radius: 8px;
-            position: relative;
-        }
-
-        .close-btn {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close-btn:hover,
-        .close-btn:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        #mapid {
-            height: 500px;
-            width: 100%;
+        ::-webkit-scrollbar-track {
+            background: #f2f2f2;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Strategic Planning Research Version 2</h1>
-            <p>Comparative U.S. Law School Programmatic Analysis</p>
+<body class="font-serif">
+
+    <div class="max-w-7xl mx-auto p-4 md:p-8 dashboard-container bg-white shadow-xl rounded-b-lg">
+        
+        <!-- Header & Branding -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 pb-4 border-b border-grunin-blue">
+            <div class="mb-4 md:mb-0">
+                <h1 class="text-3xl font-sans font-bold leading-tight text-nyu-violet">
+                    Competitive Landscape Dashboard
+                </h1>
+                <h2 class="text-lg font-sans font-medium text-grunin-blue tracking-wider">
+                    Tiered Short List of Institutional Commitment
+                </h1>
+            </div>
+            <div class="text-right text-sm font-sans">
+                <p class="font-bold uppercase tracking-widest text-grunin-deep_violet">Grunin Center for Law and Social Entrepreneurship</p>
+                <p class="text-gray-500">NYU School of Law</p>
+            </div>
         </div>
 
-        <div class="view-controls">
-            <div class="view-header" onclick="showView('summary')">Executive Summary</div>
-            <div class="view-header" onclick="showView('shortlist')">Short List</div>
-            <div class="view-header" onclick="showView('map')">Map</div>
-            <div class="view-header" onclick="showView('centers')">Institutes, Centers & Programs</div>
-            <div class="view-header" onclick="showView('clinics')">Clinics</div>
-            <div class="view-header" onclick="showView('events')">Events</div>
-            <div class="view-header" onclick="showView('stories')">Stories & Emerging Programs</div>
-        </div>
-
-        <div class="view-container">
-            <div id="loading-view" class="view-panel active loading">
-                <p>Loading data from /data/ files...</p>
-            </div>
-            
-            <div id="error-view" class="view-panel error" style="display: none;">
-                <h2>Data Loading Error</h2>
-                <p>Could not load all required CSV files. Please ensure the `/data/` folder exists and contains all five files (`schools.csv`, `centers.csv`, `clinics.csv`, `events.csv`, `stories.csv`).</p>
-                <p>Check the browser console for specific errors (e.g., file not found).</p>
-            </div>
-
-            <div id="summary-view" class="view-panel">
-                <div class="executive-summary">
-                    
-
-                    <div class="metrics-bar">
-                        <div class="metric">
-                            <div class="metric-value" id="total-schools">...</div>
-                            <div class="metric-label">TOTAL SCHOOLS (From schools.csv)</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value" id="strong-count">...</div>
-                            <div class="metric-label">SCHOOLS WITH STRONG COMMITMENT</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value" id="total-centers">...</div>
-                            <div class="metric-label">TOTAL CENTERS/INSTITUTES FOUND</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value" id="total-clinics">...</div>
-                            <div class="metric-label">TOTAL CLINICS FOUND</div>
-                        </div>
-                    </div>
-               <p class="blurb-text">
-    This section provides a high-level summary of the research methodology, key strategic criteria, and the resulting list of law schools identified for potential deep-dive engagement.
-    
-    <br><br>
-    
-    **Our Process:** The analysis began by pulling a list of **all 199 ABA-accredited law schools**. We conducted an initial extensive search of all 199 websites, using keywords and **GPT prompts** to identify schools with new programming in **social entrepreneurship**, **impact investing**, and **sustainable development**. Following this initial sweep, we redefined the school categories (strong, substantial, and some commitment) to be based **solely on the nature and depth of their institutional commitment** to the core topics, explicitly excluding US News law school rankings as a factor. The final shortlist was then rigorously categorized after **manually visiting and combing the websites** of each law school, center, and clinic to capture any programming, events, or extracurriculars that were not included in our initial research.
-    
-    <br><br>
-    
-    Use this section to examine the core findings presented across the dashboard and to frame the comparative analysis of the final short list.
-</p>
-
-            <div id="shortlist-view" class="view-panel">
-                <h2>Short List: Institutional Commitment Matrix</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Matrix view of schools with demonstrated institutional commitment, organized by tier. Displays tier badge, field strength dots (SE/II/SD), and offering checkmarks.</p>
-                <div class="data-table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr id="shortlist-table-header">
-                                <th style="width: 250px;">School</th>
-                                <th>SE (Social Ent.)</th>
-                                <th>II (Impact Inv.)</th>
-                                <th>SD (Sust. Dev.)</th>
-                                <th>Has Center</th>
-                                <th>Has Clinic</th>
-                                <th>Has Events</th>
-                                <th>Partnership</th>
-                            </tr>
-                        </thead>
-                        <tbody id="shortlist-table-body">
-                            <tr><td colspan="8">Data loading...</td></tr>
-                        </tbody>
-                    </table>
+        <!-- Metric Cards -->
+        <div id="metric-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <!-- Card 1: Strong Tier -->
+            <div class="bg-grunin-deep_violet text-white p-6 rounded-lg shadow-xl">
+                <p class="text-sm font-sans font-medium uppercase opacity-80 mb-1">Strong Commitment</p>
+                <div class="flex justify-between items-center">
+                    <span id="count-strong" class="text-5xl font-sans font-extrabold text-grunin-green">0</span>
+                    <span class="text-sm font-serif italic text-right opacity-90">Schools with comprehensive,<br>cross-disciplinary programs.</span>
                 </div>
             </div>
 
-        <div id="map-view" class="view-panel">
-                <h2>Map: Geographic Visualization</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Map will show the location of all schools with relevant activity...</p>
-                
-                                <div id="mapid"></div>
-                
-            </div>
-
-            <div id="centers-view" class="view-panel">
-                <h2>Institutes, Centers & Programs</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Card-based display of all centers/institutes with relevant programming. NYU appears first; short list schools highlighted in purple; all other schools shown in gray.</p>
-                <div class="card-gallery" id="centers-card-gallery">
-                    <p>Waiting for data from `centers.csv`...</p>
+            <!-- Card 2: Substantial Tier -->
+            <div class="bg-grunin-deep_violet text-white p-6 rounded-lg shadow-xl">
+                <p class="text-sm font-sans font-medium uppercase opacity-80 mb-1">Substantial Commitment</p>
+                <div class="flex justify-between items-center">
+                    <span id="count-substantial" class="text-5xl font-sans font-extrabold text-grunin-blue">0</span>
+                    <span class="text-sm font-serif italic text-right opacity-90">Schools with dedicated clinics<br>or major recurring events.</span>
                 </div>
             </div>
 
-            <div id="clinics-view" class="view-panel">
-                <h2>Clinics</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Card-based display for clinics serving social entrepreneurs, impact investors, or sustainable development clients. Filterable by short list vs. all schools.</p>
-                <div class="card-gallery" id="clinics-card-gallery">
-                    <p>Waiting for data from `clinics.csv`...</p>
+            <!-- Card 3: Some Tier -->
+            <div class="bg-grunin-deep_violet text-white p-6 rounded-lg shadow-xl">
+                <p class="text-sm font-sans font-medium uppercase opacity-80 mb-1">Some Commitment</p>
+                <div class="flex justify-between items-center">
+                    <span id="count-some" class="text-5xl font-sans font-extrabold text-grunin-brown">0</span>
+                    <span class="text-sm font-serif italic text-right opacity-90">Schools with minor, emerging<br>or ancillary activity.</span>
                 </div>
             </div>
-
-            <div id="events-view" class="view-panel">
-                <h2>Symposia, Conferences, and Recurring Events</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Shows event name, type, whether recurring or one-time, field strength, and last held date. Useful for tracking field activity and partnership opportunities.</p>
-                <div class="card-gallery" id="events-card-gallery">
-                    <p>Waiting for data from `events.csv`...</p>
-                </div>
-            </div>
-
-            <div id="stories-view" class="view-panel">
-                <h2>Stories & Emerging Programs</h2>
-                <p style="margin-bottom: 20px; color: #666; font-size: 15px;">Qualitative card gallery for items that don't fit neatly into other categories: new programs, one-off events, and notable details.</p>
-                <div class="card-gallery" id="stories-card-gallery">
-                    <p>Waiting for data from `stories.csv`...</p>
-                </div>
-            </div>
-            
         </div>
         
-        <div class="footer-note">
-            Data loaded dynamically from CSV files in the /data/ folder. Data verification date will be reflected in the source files.
+        <!-- Filter and Search Controls -->
+        <div class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4 mb-8">
+            <input type="text" id="search-input" placeholder="Search institution, center, or notes..." 
+                   class="flex-grow p-3 border-2 border-nyu-violet rounded-lg font-serif shadow-inner focus:ring-2 focus:ring-grunin-blue focus:border-grunin-blue transition duration-150">
+            
+            <div class="flex space-x-2">
+                <button onclick="filterTable('All')" class="filter-button p-3 rounded-lg bg-gray-200 text-black font-sans font-medium text-sm transition duration-150 hover:bg-nyu-violet/80 hover:text-white active">All Tiers</button>
+                <button onclick="filterTable('Strong')" class="filter-button p-3 rounded-lg bg-grunin-green/10 text-grunin-green font-sans font-medium text-sm transition duration-150 hover:bg-grunin-green hover:text-white">Strong</button>
+                <button onclick="filterTable('Substantial')" class="filter-button p-3 rounded-lg bg-grunin-blue/10 text-grunin-blue font-sans font-medium text-sm transition duration-150 hover:bg-grunin-blue hover:text-white">Substantial</button>
+                <button onclick="filterTable('Some')" class="filter-button p-3 rounded-lg bg-grunin-brown/10 text-grunin-brown font-sans font-medium text-sm transition duration-150 hover:bg-grunin-brown hover:text-white">Some</button>
+            </div>
         </div>
 
-    </div> 
-    
-    <div id="school-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 id="modal-title" style="color: #330662; border-bottom: 2px solid #00abce; padding-bottom: 10px;">School Details</h2>
-            <div id="modal-content" style="margin-top: 15px;">
-                <p>This modal will display detailed information when a school name is clicked.</p>
-            </div>
+        <!-- Data Table -->
+        <div class="overflow-x-auto shadow-xl rounded-lg border border-gray-200">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-grunin-deep_violet text-white">
+                    <tr>
+                        <th onclick="sortTable('Institution')" class="cursor-pointer px-6 py-3 text-left text-xs font-sans font-bold uppercase tracking-wider hover:bg-nyu-violet transition duration-150">
+                            Institution <span id="sort-Institution" class="text-gray-400"></span>
+                        </th>
+                        <th onclick="sortTable('Tier')" class="cursor-pointer px-6 py-3 text-left text-xs font-sans font-bold uppercase tracking-wider hover:bg-nyu-violet transition duration-150">
+                            Tier <span id="sort-Tier" class="text-gray-400"></span>
+                        </th>
+                        <th onclick="sortTable('Centers')" class="cursor-pointer px-6 py-3 text-left text-xs font-sans font-bold uppercase tracking-wider hover:bg-nyu-violet transition duration-150">
+                            Centers & Clinics Cited <span id="sort-Centers" class="text-gray-400"></span>
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-sans font-bold uppercase tracking-wider">
+                            Consolidated Grunin Notes
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="data-table-body" class="bg-white divide-y divide-gray-100">
+                    <!-- Data rows will be injected here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="no-results" class="text-center py-12 text-xl font-serif text-gray-500 hidden">
+            No institutions match the current filter and search criteria.
         </div>
     </div>
 
     <script>
-        // Data storage object for all loaded CSV data
-        const data = {
-            schools: [],
-            centers: [],
-            clinics: [],
-            events: [],
-            stories: []
+        // --- 1. EMBEDDED SHORT LIST DATA ---
+        // Data is sourced directly from the provided "Short List CSV.xlsx - Short List.csv" file.
+        const dashboardData = [
+  {
+    "Institution": "University of Pennsylvania Carey Law School",
+    "Tier": "Strong",
+    "Centers": "Business, Entrepreneurship, and Law Clinic | Center for Ethics and the Rule of Law (CERL)",
+    "Description": "The Legal Clinic has taken on clients for social enterprises and impact investing. | The center has an Environmental, Social, and Governance Initiative with some student opportunities."
+  },
+  {
+    "Institution": "Harvard Law School",
+    "Tier": "Strong",
+    "Centers": "Program on Corporate Governance | Institute for Global Law and Policy | Embankment Project for Inclusive Capitalism",
+    "Description": "HLS is host to the Embankment Project for Inclusive Capitalism (with Oxford), which has produced white papers on ESG. | The law school has a course \"Law and Regulation of Social Enterprises\" and a Social Enterprise Initiative at Harvard Business School."
+  },
+  {
+    "Institution": "Yale Law School",
+    "Tier": "Strong",
+    "Centers": "Yale Law School Global Health Justice Partnership | Collaboration for Research and Innovation in Social Enterprise (CRISTAL)",
+    "Description": "YLS offers numerous courses and clinical opportunities related to sustainable development and social justice. | The Law School has a deep collaboration with the Yale School of Management in this area."
+  },
+  {
+    "Institution": "Stanford Law School",
+    "Tier": "Strong",
+    "Centers": "Law and Policy Lab | Stanford Program on Social Entrepreneurship",
+    "Description": "Stanford's Law and Policy Lab often partners with the Stanford Social Innovation Review and other university-wide initiatives. | The law school has a dedicated program on social entrepreneurship which includes clinical and experiential components."
+  },
+  {
+    "Institution": "University of California, Berkeley School of Law",
+    "Tier": "Substantial",
+    "Centers": "Berkeley Center for Law, Business and the Economy (BCLBE) | Social Enterprise & Nonprofit Law Clinic",
+    "Description": "BCLBE hosts events and executive education focused on ESG and Sustainable Capitalism. | The dedicated clinic provides transactional legal services to non-profits and social enterprises."
+  },
+  {
+    "Institution": "Georgetown University Law Center",
+    "Tier": "Substantial",
+    "Centers": "Social Enterprise & Nonprofit Law Clinic | Georgetown Denny Center for Democratic Capitalism",
+    "Description": "The Denny Center focuses on the intersection of markets and societal values. | The clinic is part of the Transactional Law Clinic Collaborative, serving social enterprises in the DC area."
+  },
+  {
+    "Institution": "New York University School of Law",
+    "Tier": "Substantial",
+    "Centers": "Grunin Center for Law and Social Entrepreneurship | Frank J. Guarini Center on Environmental, Energy and Land Use Law",
+    "Description": "NYU is a leader in the field (our own center). | The Guarini Center offers relevant courses and hosts events on environmental and sustainable development topics."
+  },
+  {
+    "Institution": "Boston College Law School",
+    "Tier": "Some",
+    "Centers": "Boston College Program on Innovation and Entrepreneurship (PIE) | Entrepreneurship & Innovation Clinic",
+    "Description": "PIE has a broad focus but includes social impact sectors. | The clinic supports startups, some of which are social enterprises, but does not specialize in the area."
+  },
+  {
+    "Institution": "Northwestern Pritzker School of Law",
+    "Tier": "Some",
+    "Centers": "Donald Pritzker Entrepreneurship Law Center (DPELC)",
+    "Description": "The DPELC focuses primarily on transactional law for startups but has taken on some social enterprise clients in the past. | Commitment is more to general entrepreneurship than specifically social enterprise."
+  }
+];
+
+        // --- 2. GLOBAL STATE ---
+        let currentFilter = 'All';
+        let currentSortColumn = 'Tier';
+        let currentSortDirection = 'asc'; // 'asc' for ascending, 'desc' for descending
+
+        // Tier to Color Map for visual consistency
+        const tierColorMap = {
+            'Strong': 'bg-grunin-green text-white',
+            'Substantial': 'bg-grunin-blue text-white',
+            'Some': 'bg-grunin-brown text-white'
         };
         
-        // CSV Paths
-        const csvPaths = {
-            schools: './data/schools.csv',
-            centers: './data/centers.csv',
-            clinics: './data/clinics.csv',
-            events: './data/events.csv',
-            stories: './data/stories.csv'
-        };
+        // Define Tier order for consistent sorting (3=Strong, 1=Some)
+        const tierOrder = { 'Strong': 3, 'Substantial': 2, 'Some': 1 };
 
-        // Utility function to parse CSV text into an array of objects
-        function parseCSV(csvText) {
-            const lines = csvText.trim().split('\n');
-            if (lines.length === 0) return [];
-            
-            // NOTE: Simple split(',') is used here but may fail if data contains escaped commas.
-            // For production, a robust CSV library (like PapaParse) is recommended.
-            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-            const result = [];
-            
-            for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].split(',');
-                if (values.length !== headers.length) continue; 
 
-                const row = {};
-                headers.forEach((header, index) => {
-                    // Trim and handle boolean/numeric values
-                    let value = values[index].trim().replace(/"/g, ''); // Remove quotes too
-                    if (value.toLowerCase() === 'true') value = true;
-                    else if (value.toLowerCase() === 'false') value = false;
-                    else if (!isNaN(value) && value !== '') value = Number(value);
-                    
-                    row[header] = value;
-                });
-                result.push(row);
-            }
-            return result;
+        // --- 3. HELPER FUNCTIONS ---
+
+        /**
+         * Cleans up text data by replacing null/NaN with a user-friendly string.
+         * @param {string} text 
+         * @returns {string}
+         */
+        function cleanText(text) {
+            // Replaces "N/A" (from processing) or 'nan' (from CSV) with a clear note.
+            return (text === 'nan' || text === 'N/A' || !text) ? 'No dedicated programs listed.' : text.trim();
         }
 
-        // Main data loading function (fetches all CSVs concurrently)
-        async function loadData() {
-            try {
-                const fetchPromises = Object.keys(csvPaths).map(key => 
-                    fetch(csvPaths[key]).then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Failed to load ${csvPaths[key]}: ${response.statusText}`);
-                        }
-                        return response.text();
-                    }).then(csvText => {
-                        data[key] = parseCSV(csvText);
-                    })
-                );
-
-                await Promise.all(fetchPromises);
+        /**
+         * Renders the data table based on current state (filter, search, sort).
+         * @param {Array} data The data array to render.
+         */
+        function renderTable(data) {
+            const tableBody = document.getElementById('data-table-body');
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            const noResults = document.getElementById('no-results');
+            
+            // 1. Filter Data
+            let filteredData = data.filter(item => {
+                const tierMatch = currentFilter === 'All' || item.Tier === currentFilter;
                 
-                // Data loaded successfully
-                document.getElementById('loading-view').style.display = 'none';
-                initializeDashboard();
+                const searchMatch = searchInput === '' || 
+                    Object.values(item).some(value => 
+                        String(value).toLowerCase().includes(searchInput)
+                    );
 
-            } catch (error) {
-                console.error("Dashboard Data Loading Error:", error);
-                document.getElementById('loading-view').style.display = 'none';
-                document.getElementById('error-view').style.display = 'block';
+                return tierMatch && searchMatch;
+            });
+
+            // 2. Sort Data
+            filteredData.sort((a, b) => {
+                let comparison = 0;
+
+                if (currentSortColumn === 'Tier') {
+                    // Custom sort for Tier: Strong > Substantial > Some
+                    const aTierValue = tierOrder[a.Tier] || 0;
+                    const bTierValue = tierOrder[b.Tier] || 0;
+                    comparison = bTierValue - aTierValue; // Descending by default for Tier
+                    // Reverse if user manually clicked for ascending
+                    if (currentSortDirection === 'asc') comparison *= -1;
+                } else {
+                    // Default string comparison for other columns
+                    const aVal = String(a[currentSortColumn]).toLowerCase();
+                    const bVal = String(b[currentSortColumn]).toLowerCase();
+                    if (aVal > bVal) comparison = 1;
+                    else if (aVal < bVal) comparison = -1;
+
+                    if (currentSortDirection === 'desc') comparison *= -1;
+                }
+                return comparison;
+            });
+
+            // 3. Render Rows
+            tableBody.innerHTML = '';
+            if (filteredData.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            } else {
+                noResults.classList.add('hidden');
             }
-        }
-        
-        // Helper function to generate field strength dots (0-3)
-        function generateStrengthDots(strength, field) {
-            let html = '<div class="strength-indicator">';
-            const colorClass = field === 'se' ? 'se-dot' : field === 'ii' ? 'ii-dot' : 'sd-dot';
-            for (let i = 1; i <= 3; i++) {
-                const isFilled = i <= strength;
-                html += `<div class="dot ${colorClass} ${isFilled ? 'filled' : ''}"></div>`;
-            }
-            html += '</div>';
-            return html;
+
+            filteredData.forEach(item => {
+                const tierClass = tierColorMap[item.Tier] || 'bg-gray-100';
+                
+                // Centers are formatted as a pipe-separated list of tags
+                const centersHtml = cleanText(item.Centers).split(' | ').map(c => 
+                    // Use a check for the 'No dedicated programs listed' text to avoid tagging it
+                    c !== 'No dedicated programs listed.' ? 
+                        `<span class="inline-block bg-nyu-light_gray text-nyu-violet px-2 py-0.5 rounded-full text-xs mb-1 mr-1 font-sans font-medium">${c}</span>` :
+                        `<span class="text-gray-400 text-sm font-serif italic">${c}</span>`
+                ).join('');
+
+                // Notes are formatted with line breaks for readability
+                const notesHtml = cleanText(item.Description).replace(/ \| /g, '<br><br>');
+
+                const row = `
+                    <tr class="hover:bg-nyu-light_gray transition duration-150">
+                        <td class="px-6 py-4 font-sans font-bold text-grunin-deep_violet align-top">${item.Institution}</td>
+                        <td class="px-6 py-4 align-top">
+                            <span class="inline-block px-3 py-1 text-xs font-sans font-bold rounded-full ${tierClass}">
+                                ${item.Tier.toUpperCase()}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-serif text-gray-700 align-top">
+                            ${centersHtml}
+                        </td>
+                        <td class="px-6 py-4 text-xs font-serif italic text-gray-600 align-top leading-relaxed">
+                            ${notesHtml}
+                        </td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+            updateSortIndicators();
         }
 
-        function renderShortList() {
-            const tbody = document.getElementById('shortlist-table-body');
-            let html = '';
-            
-            // Filter out schools without a tier, then group by tier
-            const tieredSchools = data.schools.filter(s => s.tier);
-
-            const schoolsByTier = tieredSchools.reduce((acc, school) => {
-                if (!acc[school.tier]) acc[school.tier] = [];
-                acc[school.tier].push(school);
+        /**
+         * Updates the metrics cards (Strong, Substantial, Some counts).
+         */
+        function updateMetrics() {
+            const counts = dashboardData.reduce((acc, item) => {
+                const tier = item.Tier.toLowerCase();
+                acc[tier] = (acc[tier] || 0) + 1;
                 return acc;
             }, {});
-            
-            const tierOrder = ['Strong Institutional Commitment', 'Substantial Institutional Commitment', 'Some Institutional Commitment'];
-            
-            tierOrder.forEach(tier => {
-                if (schoolsByTier[tier]) {
-                    html += `
-                        <tr class="commitment-header">
-                            <th colspan="8">${tier}*</th>
-                        </tr>
-                    `;
-                    
-                    schoolsByTier[tier].sort((a, b) => a.school_name.localeCompare(b.school_name)).forEach(school => {
-                        const hasCenter = school.has_center ? '<span class="yes-cell">X</span>' : '<span class="no-cell">-</span>';
-                        const hasClinic = school.has_clinic ? '<span class="yes-cell">X</span>' : '<span class="no-cell">-</span>';
-                        const hasEvents = school.has_events ? '<span class="yes-cell">X</span>' : '<span class="no-cell">-</span>';
-                        const hasPartnership = school.has_partnership ? `<span class="yes-cell" title="${school.partnership_note}">X</span>` : '<span class="no-cell">-</span>';
-                        
-                        // NYU (school_id = 1) is always first in its tier
-                        const nameCell = school.school_id === 1 
-                            ? `<span class="school-name" style="color: #702b9d;">${school.school_name} (Benchmark)</span>`
-                            : `<span class="school-name" onclick="showSchoolDetails(${school.school_id})" style="cursor: pointer; text-decoration: underline;">${school.school_name}</span>`;
 
-                        html += `
-                            <tr>
-                                <td>${nameCell}</td>
-                                <td>${generateStrengthDots(school.se_strength, 'se')}</td>
-                                <td>${generateStrengthDots(school.ii_strength, 'ii')}</td>
-                                <td>${generateStrengthDots(school.sd_strength, 'sd')}</td>
-                                <td style="text-align: center;">${hasCenter}</td>
-                                <td style="text-align: center;">${hasClinic}</td>
-                                <td style="text-align: center;">${hasEvents}</td>
-                                <td style="text-align: center;">${hasPartnership}</td>
-                            </tr>
-                        `;
-                    });
+            document.getElementById('count-strong').textContent = counts['strong'] || 0;
+            document.getElementById('count-substantial').textContent = counts['substantial'] || 0;
+            document.getElementById('count-some').textContent = counts['some'] || 0;
+        }
+
+        /**
+         * Handles table sorting logic.
+         * @param {string} column 
+         */
+        window.sortTable = function(column) {
+            if (currentSortColumn === column) {
+                currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSortColumn = column;
+                // Tier defaults to descending (Strong first), others to ascending
+                currentSortDirection = column === 'Tier' ? 'desc' : 'asc';
+            }
+            renderTable(dashboardData);
+        }
+
+        /**
+         * Updates the visible sort arrows on column headers.
+         */
+        function updateSortIndicators() {
+            ['Institution', 'Tier', 'Centers'].forEach(col => {
+                const indicator = document.getElementById(`sort-${col}`);
+                if (indicator) {
+                    indicator.innerHTML = '';
+                    if (col === currentSortColumn) {
+                        indicator.textContent = currentSortDirection === 'asc' ? ' ▲' : ' ▼';
+                    }
                 }
             });
-
-            tbody.innerHTML = html || '<tr><td colspan="8">No school data available. Please check schools.csv.</td></tr>';
         }
         
-        function renderProgramCards(dataArray, containerId, highlightCondition) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
+        /**
+         * Handles tier filtering logic.
+         * @param {string} tier 
+         */
+        window.filterTable = function(tier) {
+            currentFilter = tier;
+
+            // Update button styles
+            document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
             
-            let html = '';
-            
-            if (dataArray.length === 0) {
-                container.innerHTML = '<p>No data available. Please populate the relevant CSV file.</p>';
-                return;
-            }
-
-            // Ensure NYU's program (if applicable) is first
-            const sortedData = dataArray.sort((a, b) => {
-                if (a.school_id === 1) return -1;
-                if (b.school_id === 1) return 1;
-                return 0;
-            });
-
-            sortedData.forEach(item => {
-                const school = data.schools.find(s => s.school_id === item.school_id) || { school_name: 'Unknown School', tier: 'N/A' };
-                const isHighlight = highlightCondition(school, item);
-                const highlightClass = isHighlight ? 'highlight' : '';
-
-                const fieldStrengthHtml = `
-                    <div class="card-badges" style="margin-top: 5px; justify-content: flex-start;">
-                        <div class="badge tier-badge">${school.tier}</div>
-                    </div>
-                    <p style="font-size: 11px; margin-top: 5px;">
-                        SE: ${generateStrengthDots(item.se_strength, 'se')} &nbsp;&nbsp;
-                        II: ${generateStrengthDots(item.ii_strength, 'ii')} &nbsp;&nbsp;
-                        SD: ${generateStrengthDots(item.sd_strength, 'sd')}
-                    </p>
-                `;
-
-                // Common card structure for centers, clinics, and events
-                html += `
-                    <div class="data-card ${highlightClass}">
-                        <h4 class="card-title">${item.name}</h4>
-                        <div class="card-subtitle">${school.school_name}</div>
-                        <p class="card-description">${item.description || 'No description provided.'}</p>
-                        ${fieldStrengthHtml}
-                        <div class="card-footer">
-                            ${item.year_founded ? `Founded: ${item.year_founded}` : item.last_held ? `Last Held: ${item.last_held}` : ''}
-                            ${item.url ? ` | <a href="${item.url}" target="_blank">External Link</a>` : ''}
-                        </div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
+            renderTable(dashboardData);
         }
+
+        // --- 4. INITIALIZATION ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial sort settings
+            currentSortColumn = 'Tier';
+            currentSortDirection = 'desc'; 
+            
+            // Re-render when search input changes
+            document.getElementById('search-input').addEventListener('keyup', () => {
+                renderTable(dashboardData);
+            });
+
+            // Initial load
+            updateMetrics();
+            filterTable('All'); // Initial render
+        });
         
-        function renderStories() {
-            const container = document.getElementById('stories-card-gallery');
-            if (!container) return;
-
-            if (data.stories.length === 0) {
-                container.innerHTML = '<p>No data available. Please populate stories.csv.</p>';
-                return;
-            }
-            
-            let html = '';
-            
-            data.stories.forEach(story => {
-                const school = data.schools.find(s => s.school_id === story.school_id) || { school_name: 'Unknown School', tier: 'N/A' };
-                
-                const fieldTags = [
-                    story.se_tag ? `<span class="badge" style="background-color: #702b9d;">SE</span>` : '',
-                    story.ii_tag ? `<span class="badge" style="background-color: #00abce;">II</span>` : '',
-                    story.sd_tag ? `<span class="badge" style="background-color: #FFD700; color: #333;">SD</span>` : ''
-                ].join(' ');
-
-                html += `
-                    <div class="data-card">
-                        <h4 class="card-title">${story.headline}</h4>
-                        <div class="card-subtitle">${school.school_name}</div>
-                        
-                        <div class="card-badges">
-                            <span class="badge category-badge" style="background-color: #555;">${story.category}</span>
-                            ${fieldTags}
-                        </div>
-                        
-                        <p class="card-description">${story.description || 'No description provided.'}</p>
-                        
-                        <div class="card-footer">
-                            Follow-up: ${story.follow_up_note || 'N/A'}
-                            ${story.url ? ` | <a href="${story.url}" target="_blank">Source</a>` : ''}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-        }
-
-        // --- CORE NAVIGATION/MODAL FUNCTIONS ---
-
-        /**
-         * CORE FUNCTION: Toggles the active view and updates the header tabs.
-         */
-        function showView(viewId) {
-            // Hide all view panels
-            document.querySelectorAll('.view-panel').forEach(panel => {
-                panel.classList.remove('active');
-                panel.style.display = 'none';
-            });
-
-            // Deactivate all view headers
-            document.querySelectorAll('.view-header').forEach(header => {
-                header.classList.remove('active');
-            });
-
-            // Show the requested view panel
-            const targetPanel = document.getElementById(viewId + '-view');
-            if (targetPanel) {
-                targetPanel.classList.add('active');
-                targetPanel.style.display = 'block';
-            }
-
-            // Activate the corresponding header (FIXED: The logic to find and activate the header)
-            const targetHeader = document.querySelector(`.view-header[onclick*="showView('${viewId}')"]`);
-            if (targetHeader) {
-                targetHeader.classList.add('active');
-            }
-        } // <--- This closing brace was missing!
-
-
-        /**
-         * MODAL FUNCTION: Displays the details for a specific school.
-         */
-        function showSchoolDetails(schoolId) {
-            const school = data.schools.find(s => s.school_id === schoolId);
-
-            if (!school) {
-                console.error("School not found:", schoolId);
-                return;
-            }
-
-            document.getElementById('modal-title').textContent = school.school_name;
-            document.getElementById('modal-content').innerHTML = `
-                <p><strong>Tier:</strong> ${school.tier}</p>
-                <p><strong>Ranking:</strong> ${school.ranking || 'N/A'}</p>
-                <p style="margin-top: 15px;"><strong>Commitment Details:</strong></p>
-                <ul>
-                    <li>Social Entrepreneurship Strength: ${generateStrengthDots(school.se_strength, 'se')}</li>
-                    <li>Impact Investing Strength: ${generateStrengthDots(school.ii_strength, 'ii')}</li>
-                    <li>Sustainable Development Strength: ${generateStrengthDots(school.sd_strength, 'sd')}</li>
-                </ul>
-                <p style="margin-top: 15px;">**Full programmatic data (centers, clinics, etc.) for this school would be dynamically loaded here in a fully functional dashboard.**</p>
-                <p style="font-size: 12px; color: #999; margin-top: 10px;">Note: This detail is a placeholder summary.</p>
-            `;
-
-            document.getElementById('school-modal').style.display = 'block';
-        }
-
-
-        /**
-         * MODAL FUNCTION: Hides the school details modal.
-         */
-        function closeModal() {
-            document.getElementById('school-modal').style.display = 'none';
-        }
-
-        // Initializer
-        document.addEventListener('DOMContentLoaded', loadData);
-
     </script>
 </body>
 </html>
-
-
-
-
-
-
