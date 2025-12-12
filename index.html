@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grunin Center Research Data Viewer</title>
     
-    <!-- Load Tailwind CSS -->
+    <!-- Load Tailwind CSS for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Load Brand Fonts: Montserrat (Sans for headers) and Frank Ruhl Libre (Serif for body) -->
@@ -105,7 +105,7 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <p class="mt-4 text-gray-600 font-sans font-medium">Loading data from CSV files...</p>
+            <p class="mt-4 text-gray-600 font-sans font-medium">Loading data from uploaded files...</p>
         </div>
 
         <!-- Data Table Container -->
@@ -153,11 +153,17 @@
     </div>
 
     <script>
-        // --- Configuration ---
+        // =================================================================================
+        // *** Data Access is now using your uploaded CSV files directly by name ***
+        // =================================================================================
+        
+        // The file paths now point directly to the files you uploaded.
+        // We are using the file names from the conversation history to ensure the correct files are accessed.
         const FILE_PATHS = {
-            shortList: "Short List CSV - Short List.csv",
-            institutes: "Institutes, Centers, & Programs CSV - Institutes, Centers, & Programs.csv"
+            shortList: 'uploaded:Short List CSV - Short List.csv', 
+            institutes: 'uploaded:Institutes, Centers, & Programs CSV - Institutes, Centers, & Programs.csv' 
         };
+
         const MAX_RETRIES = 3;
         const SHORT_LIST_COLUMNS_TO_DISPLAY = [
             'Institution', 
@@ -206,13 +212,18 @@
                 
                 const row = {};
                 for (let j = 0; j < headers.length && j < values.length; j++) {
-                    let val = values[j].trim();
-                    // Clean up quotes and handle the empty trailing columns common in the short list file
-                    if (val.startsWith('"') && val.endsWith('"')) {
-                        val = val.substring(1, val.length - 1).replace(/""/g, '"');
+                    let val = values[j];
+                    if (val) {
+                         val = val.trim();
+                         // Clean up quotes and handle the empty trailing columns common in the short list file
+                         if (val.startsWith('"') && val.endsWith('"')) {
+                            val = val.substring(1, val.length - 1).replace(/""/g, '"');
+                         }
+                    } else {
+                        val = '';
                     }
+
                     if (headers[j]) {
-                         // Simplify header names for data access (e.g., 'Relevant Centers, Institutes, & Programs' -> 'Relevant Centers, Institutes, & Programs')
                          const key = headers[j];
                          row[key] = val;
                     }
@@ -224,19 +235,21 @@
 
         /**
          * Fetches and parses a single CSV file with retries.
-         * @param {string} filePath The path to the CSV file.
+         * @param {string} filePath The path to the CSV file (now the 'uploaded:filename' path).
          * @returns {Promise<Array<Object>>} Parsed data.
          */
         async function fetchFile(filePath) {
             for (let i = 0; i < MAX_RETRIES; i++) {
                 try {
+                    console.log(`Fetching: ${filePath}`);
+                    // Fetch is automatically handled by the environment for 'uploaded:' paths
                     const response = await fetch(filePath);
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status} for ${filePath}`);
                     const text = await response.text();
                     return parseCSV(text);
                 } catch (error) {
                     console.error(`Attempt ${i + 1} failed for ${filePath}:`, error);
-                    if (i === MAX_RETRIES - 1) throw new Error(`Failed to load data for ${filePath} after ${MAX_RETRIES} attempts.`);
+                    if (i === MAX_RETRIES - 1) throw new Error(`Failed to load data for ${filePath} after ${MAX_RETRIES} attempts. Check file names in FILE_PATHS.`);
                     await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i))); // Exponential backoff (1s, 2s, 4s)
                 }
             }
@@ -247,11 +260,14 @@
          */
         async function loadAllData() {
             try {
+                // Wait for both files to load concurrently
                 const [shortList, institutes] = await Promise.all([
                     fetchFile(FILE_PATHS.shortList),
                     fetchFile(FILE_PATHS.institutes)
                 ]);
-                allData.shortList = shortList.filter(row => row.Institution); // Filter out rows without institution name
+                
+                // Filter out empty rows based on Institution name
+                allData.shortList = shortList.filter(row => row.Institution); 
                 allData.institutes = institutes.filter(row => row.Institution);
                 
                 // Show content and hide loading
@@ -264,8 +280,8 @@
             } catch (error) {
                 console.error('Fatal data loading error:', error);
                 document.getElementById('loading-state').innerHTML = `<p class="mt-4 text-red-600 font-sans font-medium">
-                    Error loading data. Please ensure the CSV files are accessible. Details: ${error.message}
-                </p>`;
+                    Error loading data. Check console for details. **Did you upload the correct files?**
+                </p><p class="mt-2 text-sm text-red-400">Error: ${error.message}</p>`;
             }
         }
 
@@ -279,8 +295,16 @@
             currentTab = tabName;
             
             // Update button visual state
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active', 'text-gray-500'));
-            document.getElementById(`tab-${tabName}`).classList.add('active');
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.remove('text-gray-500');
+                if (btn.id === `tab-${tabName}`) {
+                    btn.classList.add('active');
+                    btn.classList.remove('text-gray-500');
+                } else {
+                    btn.classList.add('text-gray-500');
+                }
+            });
             
             // Update subtitle
             const subtitle = tabName === 'shortList' ? 'Short List of Competitive Institutions' : 'Institutes, Centers, & Programs Details';
@@ -346,9 +370,7 @@
             tableHeaderRow.innerHTML = columns.map(col => {
                 const isCurrentSort = col === currentSortColumn;
                 const sortIndicator = isCurrentSort ? (currentSortDirection === 'asc' ? ' ▲' : ' ▼') : '';
-                // Institution column is clickable on both tabs, others only on the list view
-                const isClickable = true; 
-
+                
                 return `
                     <th onclick="sortTable('${col}')" class="cursor-pointer px-6 py-3 text-left text-xs font-sans font-bold uppercase tracking-wider hover:bg-nyu-violet transition duration-150 whitespace-nowrap">
                         ${col.replace(/_/g, ' ')} <span class="text-gray-400">${sortIndicator}</span>
@@ -367,15 +389,20 @@
             filteredData.forEach(item => {
                 const isShortList = currentTab === 'shortList';
                 const rowClass = isShortList ? 'cursor-pointer data-table-row hover:bg-nyu-light_gray' : 'data-table-row';
+                // Need to escape single quotes in the institution name for the JS function call
                 const clickHandler = isShortList ? `onclick="showDetails('${item.Institution.replace(/'/g, "\\'")}')"` : '';
                 
                 const cells = columns.map(col => {
                     let content = item[col] || '';
                     if (isShortList && col === 'Institution') {
-                         content = `<span class="font-bold text-grunin-deep_violet">${content}</span><span class="text-grunin-blue ml-2">&rarr; Details</span>`;
+                         // Make the Institution link clearly look like a drill-down target
+                         content = `<span class="font-bold text-grunin-deep_violet">${content}</span><span class="text-grunin-blue ml-2 font-sans font-medium text-xs">&rarr; View Details</span>`;
                     } else if (col === 'Appeared in 2017 Research') {
-                        const statusClass = content.toUpperCase() === 'TRUE' ? 'bg-grunin-green text-white' : 'bg-grunin-brown/50 text-white';
-                        content = `<span class="inline-block px-3 py-1 text-xs font-sans font-bold rounded-full ${statusClass}">${content.toUpperCase()}</span>`;
+                        // Check for various casing of TRUE/FALSE
+                        const status = String(content).trim().toUpperCase();
+                        const statusText = status === 'TRUE' ? 'YES' : 'NO';
+                        const statusClass = status === 'TRUE' ? 'bg-grunin-green text-white' : 'bg-grunin-brown/50 text-white';
+                        content = `<span class="inline-block px-3 py-1 text-xs font-sans font-bold rounded-full ${statusClass}">${statusText}</span>`;
                     }
                     return `<td class="px-6 py-4 text-sm font-serif text-gray-700 align-top leading-relaxed">${content}</td>`;
                 }).join('');
@@ -407,7 +434,7 @@
                         shortListDetailEl.insertAdjacentHTML('beforeend', `
                             <div class="p-2 border-b border-gray-100">
                                 <p class="font-sans font-semibold text-grunin-deep_violet text-sm uppercase">${key.replace(/_/g, ' ')}</p>
-                                <p class="text-gray-700">${value}</p>
+                                <p class="text-gray-700 whitespace-pre-wrap">${value}</p>
                             </div>
                         `);
                     }
@@ -421,13 +448,14 @@
             if (secondaryItems.length > 0) {
                 secondaryItems.forEach(detail => {
                     const appeared = detail['Appeared in 2017 Research'];
-                    const appearedClass = appeared && appeared.toUpperCase() === 'TRUE' ? 'text-grunin-green' : 'text-gray-400';
+                    const status = String(appeared).trim().toUpperCase();
+                    const appearedClass = status === 'TRUE' ? 'text-grunin-green font-bold' : 'text-grunin-brown/80 font-medium';
                     const detailHtml = `
                         <div class="border-b last:border-b-0 pb-3">
                             <p class="font-sans font-semibold text-gray-800">${detail['Center Name'] || 'Center Name N/A'}</p>
                             <p class="text-xs font-serif italic text-gray-600">${detail['Notes from Grunin Team'] || 'No notes available.'}</p>
                             <p class="text-xs font-sans mt-1 ${appearedClass}">
-                                Research Status: ${appeared && appeared.toUpperCase() === 'TRUE' ? 'Mentioned in 2017 Research' : 'New/Updated Since 2017'}
+                                Research Status: ${status === 'TRUE' ? 'Mentioned in 2017 Research' : 'New/Updated Since 2017'}
                             </p>
                         </div>
                     `;
