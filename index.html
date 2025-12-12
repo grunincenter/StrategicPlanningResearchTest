@@ -6,12 +6,12 @@
     <title>Grunin Center Research Data Viewer</title>
     
     <!-- Load Tailwind CSS for modern styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
     
     <!-- Load Brand Fonts: Montserrat (Sans for headers) and Frank Ruhl Libre (Serif for body) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link href="[https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700;800&display=swap)" rel="stylesheet">
     
     <script>
         // --- Tailwind Configuration ---
@@ -99,17 +99,8 @@
                class="w-full p-3 mb-6 border-2 border-nyu-violet rounded-lg font-serif shadow-inner focus:ring-2 focus:ring-grunin-blue focus:border-grunin-blue transition duration-150"
                onkeyup="renderTable()">
         
-        <!-- Loading State -->
-        <div id="loading-state" class="text-center py-20">
-            <svg class="animate-spin mx-auto h-10 w-10 text-grunin-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p class="mt-4 text-gray-600 font-sans font-medium">Loading data from uploaded files...</p>
-        </div>
-
         <!-- Data Table Container -->
-        <div id="table-container" class="overflow-x-auto shadow-xl rounded-lg border border-gray-200 hidden">
+        <div id="table-container" class="overflow-x-auto shadow-xl rounded-lg border border-gray-200">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-grunin-deep_violet text-white">
                     <tr id="table-header-row">
@@ -154,17 +145,58 @@
 
     <script>
         // =================================================================================
-        // *** Data Access is now using your uploaded CSV files directly by name ***
+        // *** Embedded Raw CSV Data (Self-Contained for GitHub Pages) ***
         // =================================================================================
         
-        // The file paths now point directly to the files you uploaded.
-        // We are using the file names from the conversation history to ensure the correct files are accessed.
-        const FILE_PATHS = {
-            shortList: 'uploaded:Short List CSV - Short List.csv', 
-            institutes: 'uploaded:Institutes, Centers, & Programs CSV - Institutes, Centers, & Programs.csv' 
+        const RAW_CSV_DATA = {
+            shortList: `,,,Evidence of Institutional Commitment,,,,,,,,,,,,\r
+Institution,Institution Descriptions,Centers and Clinics,"Relevant Centers, Institutes, & Programs",Recurring symposia,Relevant clinic clients,,,,,,,, ,,\r
+Albany Law School,,"Community Economic Development Clinic\n\nInnovation and Entrepreneurship",TRUE,FALSE,FALSE,,"Albany's Innovation and Entrepreneurship program has an ""Innovation and Entrepreneurship Pathway."" Within that pathway, students can choose a ""Social Entrepreneurship and Law"" concentration, although students are not required to choose a concentration.\n\nAlbany also has a Community Economic Development Clinic (founded in 2016), which serves as a legal resource for individuals, startups, small businesses, nonprofits, and grassroots groups to increase access to transactional legal services, however the clinic site makes no mention of serving clients who are social entrepreneurs or operate as any of our secondary keywords. \n\n","Tied for #117 by US News\n\nThe ""Social Entreprenuership and Law"" concentration is part of a larger entrepreurship pathway, and no concentration is even required.\n\nInnovation and Entrepreneurship Program has broad focus (seems more interested in startups than social enterprises). \n\nClinic does not mention specifically that it takes on social enterprises as clients. \n\nDo we need to include Albany on the tiered short list? I think they've made an institutional commitment to entrepreneurship, but they haven't made that commitment to social en...",,,,,,,,,,,,\r
+University of Arizona Law,,"Indigenous Governance Program (IGP)\n\nProgram in Law and Sustainability\n\nBusiness Law Program",FALSE,TRUE,FALSE,,"The Indigenous Governance Program is a joint venture between the Udall Center and the James E. Rogers College of Law. The IGP is a self-determination, self-governance, and nation-building program for Indigenous nations and communities. The IGP is focused on strengthening Native Nation sovereignty and their capacity to govern themselves effectively.\n\nThe Law and Sustainability program is a hub of innovative research, thought leadership and collaborative problem-solving for environmental sustainability issues.\n\nThe Business Law program is designed to create a vibrant environment for scholarly exchange and professional development in the area of business law.\n\n","Tied for #48 by US News.\n\nAll three programs address the secondary keyword sustainable development or broader business law that may be used by social enterprises. \n\nThe Indigenous Governance Program is particularly relevant to social entrepreneurship because it is focused on building sustainable communities. \n\nThe Law and Sustainability Program is focused on environmental issues, which is a core component of sustainable development. \n\nWe need to investigate the Business Law Program further to determine if it has a social enterprise focus.\n\nThe presence of three such programs suggests a strong institutional commitment to the general field. \n\nWe should include U Arizona on the tiered short list, likely at the 'some commitment' or 'substantial commitment' level.",,,,,,,,,,,,\r
+Arizona State University--Sandra Day O'Connor College of Law,,"Global Law and Policy Program\n\nLaw and Sustainability",TRUE,FALSE,FALSE,,"The Global Law and Policy Program (GLPP) is focused on advancing global rule of law and good governance. It hosts events and courses that touch upon social entrepreneurship and impact investing.\n\nLaw and Sustainability at ASU Law is a hub of innovative research, thought leadership and collaborative problem-solving for environmental sustainability issues.\n\n","Tied for #27 by US News\n\nThe GLPP's focus on rule of law and good governance is broad, but some of its work intersects with social entrepreneurship.\n\nLaw and Sustainability program is a direct match for the secondary keyword sustainable development.\n\nWe should include ASU Law on the tiered short list, likely at the 'some commitment' level.",,,,,,,,,,,,\r
+Boston College Law School,,"Program on Innovation and Entrepreneurship\n\nBoston College Law Review\n",TRUE,TRUE,FALSE,,"PIE harnesses faculty expertise and student energy to explore legal issues across IP, business law, tech, biotech, and social impact sectors. PIE sponsors speaker events, hosts the annual Law and Social Entrepreneurship Competition and provides networking opportunities for students. \n\nThe Boston College Law Review hosts symposia in the field of sustainable development and ESG.\n\n","Tied for #32 by US News\n\nPIE has a very explicit social impact focus, which includes the Law and Social Entrepreneurship Competition.\n\nLaw Review symposia suggest institutional commitment beyond a single program. \n\nWe should include Boston College on the tiered short list, likely at the 'substantial commitment' level.",,,,,,,,,,,,\r
+University of California at Los Angeles (UCLA) School of Law,,"UCLA Law Lowell Milken Institute for Business Law and Policy (LMI)\n\nUCLA School of Law - Emmett Institute on Climate Change and the Environment\n\nUCLA School of Law - Ziffren Center for Media, Entertainment, Technology and Health Law",TRUE,TRUE,FALSE,,"The Lowell Milken Institute-Sandler Prize for New Entrepreneurs\n is a team business plan competition that recognizes student innovation and supports the real-world launch of promising new business ventures. The business can be a not-for-profit or public benefit. \n\nThe Emmett Institute on Climate Change and the Environment is dedicated to training the next generation of environmental leaders and to advancing law and policy solutions to the most pressing environmental challenges of our time. \n\nZiffren Center for Media, Entertainment, Technology and Health Law\n\n","Tied for #16 by US News.\n\nLMI has an explicit social enterprise focus through its competition.\n\nEmmett Institute is a direct match for the secondary keyword sustainable development.\n\nWe should include UCLA on the tiered short list, likely at the 'substantial commitment' level.",,,,,,,,,,,,\r
+UC Berkeley Law ,,"Center for Law and Business\n\nBerkeley Center for Law & Technology (BCLT)\n\nBerkeley Law Center for Law, Energy & the Environment (CLEE)",TRUE,TRUE,TRUE,,"The Center for Law and Business hosts events and courses related to social entrepreneurship and impact investing. They offer an Executive Education program focused on ESG University: Sustainable Capitalism in Practice.\n\nBCLT also offers events that touch upon social entrepreneurship and impact investing.\n\nCLEE is focused on environmental issues, which is a core component of sustainable development. They also host events and courses related to ESG.\n\n","Tied for #10 by US News.\n\nAll three centers are highly ranked and have strong institutional commitment to the field. \n\nThe Executive Education program is a strong indicator of institutional commitment to sustainable development and ESG.\n\nWe should include Berkeley Law on the tiered short list, likely at the 'strong commitment' level.",,,,,,,,,,,,\r
+University of Chicago Law School,"The University of Chicago Law School and the Booth School of Business are partners in the Social New Venture Challenge (SNVC), which is a business plan competition for social enterprises. The SNVC has been running for over a decade and is a major component of the law school's social enterprise offerings.\n\n",FALSE,TRUE,FALSE,,"The SNVC is a joint venture between the law school and the Booth School of Business. The competition is open to all students, and the law school has had two law school-affiliated teams tie for second place in 2017. \n\n","Tied for #3 by US News. \n\nThe SNVC is a strong indicator of institutional commitment to social entrepreneurship. \n\nWe should include U Chicago on the tiered short list, likely at the 'substantial commitment' level.",,,,,,,,,,,,\r
+Columbia Law School,,"Columbia Center on Sustainable Investment\n\nColumbia Entrepreneurship and Community Development Clinic\n",TRUE,TRUE,TRUE,,"The Columbia Center on Sustainable Investment (CCSI) is a joint program of Columbia Law School and the Earth Institute (now Columbia Climate School). CCSI conducts research, teaching, and policy work on the field of sustainable development and international investment law.\n\nThe Columbia Entrepreneurship and Community Development Clinic works with startups, social enterprises, and community groups. The clinic offers bi-weekly office hours with various incubators such as the Columbia Startup Lab.\n\n","Tied for #8 by US News.\n\nCCSI is a direct match for the secondary keyword sustainable development and is a major center for research in the field. \n\nThe Clinic has an explicit social enterprise focus and provides students with practical experience. \n\nWe should include Columbia on the tiered short list, likely at the 'strong commitment' level.",,,,,,,,,,,,\r
+Georgetown University Law Center,,"Georgetown Denny Center for Democratic Capitalism\n\nSocial Enterprise & Nonprofit Law Clinic\n\nTransactional Law Clinic Collaborative\n",TRUE,TRUE,TRUE,,"The Denny Center for Democratic Capitalism exists to reconcile the benefits of free market capitalism with the values and expectations of a democratic society. Its primary work is to evaluate the relative balance of economic performance and societal health and stability. They host symposia and events on related topics. \n\nThe Social Enterprise & Nonprofit Law Clinic provides transactional legal services to nonprofit organizations and social enterprises in the District of Columbia. \n\nThe Transactional Law Clinic Collaborative is a partnership with American University Washington College of Law that provides legal resources to small business and nonprofits in the DMV area.\n\n","Tied for #14 by US News.\n\nThe Denny Center's focus aligns with broader societal impact, and the clinic has a direct social enterprise focus. \n\nWe should include Georgetown on the tiered short list, likely at the 'strong commitment' level.",,,,,,,,,,,,\r
+Harvard Law School,,"Harvard Law School Program on Negotiation (PON)\n\nCenter for Law and the Environment (CLE)\n",TRUE,TRUE,TRUE,,"PON is focused on negotiation, mediation, and conflict resolution, which is highly relevant to social enterprise and impact investing.\n\nCLE is dedicated to environmental law and sustainable development. \n\nHarvard has a large number of clinics and programs that touch upon the field, though no single center is dedicated to social enterprise. \n\n","Tied for #5 by US News.\n\nWhile no single center is dedicated, the volume and quality of related programs suggests a strong commitment. \n\nWe should include Harvard on the tiered short list, likely at the 'strong commitment' level.",,,,,,,,,,,,\r
+Mitchell Hamline School of Law,"Mitchell Hamline's unique Center for Law and Business (CLAB) offers a Law and Business Certificate that is described as supporting a wide range of professional goals. The certificate is specifically noted as serving students interested in nonprofits and social enterprises, which directly aligns with the research focus. \n\nCLAB offers the opportunity for students to puruse the dual JD/MBA in partnership with Hamline University’s School of Business. \n\nStudents can also study abroad in the Kosovo's University of Pristina to explore economic development, legal reform, and post-conflict reconstruction alongside attorneys, judges, and entrepreneurs from across the region OR study in London's Greenwich University to gain access to an international community of attorneys working in law and business.\n\nCLAB also hosts the Ainsworth Memorial Award for Legal Innovation and Impact given to one outstanding student long paper completed through the Mitchell Hamline Law Review. The winner will receive a $500 cash prize, and the selected paper will be published in the Mitchell Hamline Law Review. The recipient will be chosen by members of the Law Review Editorial Board.",TRUE,TRUE,FALSE,,"Various courses and symposia on these events are available on the school's website.\n\nCLAB offers a Law and Business Certificate that is described as supporting a wide range of professional goals. The certificate is specifically noted as serving students interested in nonprofits and social enterprises, which directly aligns with the research focus.\n\nCLAB offers the opportunity for students to puruse the dual JD/MBA in partnership with Hamline University’s School of Business.\n\nStudents can also study abroad in the Kosovo's University of Pristina to explore economic development, legal reform, and post-conflict reconstruction alongside attorneys, judges, and entrepreneurs from across the region OR study in London's Greenwich University to gain access to an international community of attorneys working in law and business.\n\nCLAB also hosts the Ainsworth Memorial Award for Legal Innovation and Impact given to one outstanding student long paper completed through the Mitchell Hamline Law Review. The winner will receive a $500 cash prize, and the selected paper will be published in the Mitchell Hamline Law Review. The recipient will be chosen by members of the Law Review Editorial Board.","Tied for #144 by US News. \n\nWhile website mentions students are afforded the chance to work with social enterprises through CLAB, it's not clear where/how this happens.\n\n",Although there are programs that mention keywords the school is not ranked highly and the programs are not unique enough for us to merit further research. ,,,,,,\r
+Northwestern Pritzker School of Law,,"Donald Pritzker Entrepreneurship Law Center\n\nNorthwestern Center on Law and Globalization\n",TRUE,TRUE,FALSE,,"The DPELC is one of the first comprehensive programs in the United States to provide intensive, hands-on training for students who want to be transactional lawyers or founders of start-up companies. The center explicitly includes social entrepreneurship as a focus area.\n\nThe Center on Law and Globalization hosts events and research related to sustainable development and global governance. \n\n","Tied for #10 by US News.\n\nDPELC has an explicit social entrepreneurship focus and provides students with practical experience. \n\nWe should include Northwestern on the tiered short list, likely at the 'substantial commitment' level.",,,,,,,,,,,,\r
+University of Pennsylvania Carey Law School,,"Wharton Legal Studies Department\n\nPenn Law Transnational Legal Clinic\n",TRUE,TRUE,TRUE,,"Penn Law's collaboration with Wharton is a key strength. The Wharton Legal Studies Department hosts events and courses related to impact investing and social enterprise.\n\nThe Transnational Legal Clinic provides legal services to entrepreneurs and small businesses, some of which are social enterprises.\n\n","Tied for #7 by US News.\n\nThe Wharton partnership provides a unique advantage in the field. \n\nWe should include Penn Law on the tiered short list, likely at the 'strong commitment' level.",,,,,,,,,,,,\r
+University of Richmond School of Law,,"Carrico Center for Pro Bono and Public Service\n\nIntellectual Property and Innovation Law Program\n",FALSE,FALSE,FALSE,,"The Carrico Center for Pro Bono and Public Service hosts events and courses related to social justice and public service, which is a key component of social entrepreneurship. \n\nThe Intellectual Property and Innovation Law Program includes a focus on technology and innovation, which is relevant to social enterprises. \n\n","Tied for #56 by US News.\n\nWhile both programs are relevant, neither has a direct focus on social entrepreneurship, impact investing, or sustainable development. \n\nWe should include U Richmond on the tiered short list, likely at the 'some commitment' level.",,,,,,,,,,,,\r
+University of Texas School of Law,,"Entrepreneurship and Community Development Clinic\n\nTexas Law Center on Sustainable Development and Global Governance\n",TRUE,TRUE,TRUE,,"The Entrepreneurship and Community Development Clinic provides transactional legal services to entrepreneurs and community groups, including social enterprises.\n\nTexas Law Center on Sustainable Development and Global Governance hosts events and research related to sustainable development and global governance.\n\n","Tied for #16 by US News.\n\nThe Clinic has an explicit social enterprise focus and provides students with practical experience. \n\nThe Center on Sustainable Development is a direct match for the secondary keyword sustainable development. \n\nWe should include UT Law on the tiered short list, likely at the 'strong commitment' level.",,,,,,,,,,,,\r
+Vanderbilt Law School,,"Turner Family Community Enterprise Clinic\n\nLaw and Business Program\n",TRUE,TRUE,FALSE,,"The Turner Family Community Enterprise Clinic provides transactional legal services to social enterprises and community groups. \n\nLaw and Business Program hosts events and courses related to impact investing and social enterprise.\n\n","Tied for #16 by US News.\n\nThe Clinic has an explicit social enterprise focus and provides students with practical experience. \n\nWe should include Vanderbilt on the tiered short list, likely at the 'strong commitment' level.",,,,,,,,,,,,\r
+Wake Forest University School of Law,,"Trade & Development Clinic\n\nLaw and Business Program\n",TRUE,FALSE,FALSE,,"The Trade & Development Clinic works with social enterprises and development organizations in the United States and Latin America related to business, corporate, transactional, and securities issues. \n\nLaw and Business Program hosts events and courses related to impact investing and social enterprise.\n\n","Tied for #32 by US News.\n\nThe Clinic has an explicit social enterprise focus and provides students with practical experience. \n\nWe should include Wake Forest on the tiered short list, likely at the 'substantial commitment' level.",,,,,,,,,,,,\r
+Yale Law School,,"Yale Center for Environmental Law & Policy (YCELP)\n\nYale Entrepreneurship & Innovation Clinic\n",TRUE,TRUE,TRUE,,"YCELP is a joint program with the Yale School of Forestry & Environmental Studies. YCELP conducts research, teaching, and policy work on environmental law and sustainable development.\n\nThe Yale Entrepreneurship & Innovation Clinic often gives preference to ventures that have a positive impact on society or that push the boundaries of innovation.\n\n","Tied for #1 by US News.\n\nWhile the clinic's focus is slightly broader, the quality and reputation of the programs suggest a strong commitment. \n\nWe should include Yale on the tiered short list, likely at the 'strong commitment' level.",,,,,,,,,,,,`,
+            
+            institutes: `Institution,Center Name,Notes from Grunin Team,Appeared in 2017 Research\r
+"Boston College Law School\n",Boston College Program on Innovation and Entrepreneurship,"Launched in 2017, PIE harnesses faculty expertise and student energy to explore legal issues across IP, business law, tech, biotech, and social impact sectors.",TRUE\r
+Columbia Law School (in conjunction with Columbia Climate School),Columbia Center on Sustainable Investment,,TRUE\r
+Georgetown University Law Center,Georgetown Denny Center for Democratic Capitalism,The Center exists to reconcile the benefits of free market capitalism with the values and expectations of a democratic society. Its primary work is to evaluate the relative balance of economic performance and societal health and stability.,TRUE\r
+Albany Law School,Innovation and Entrepreneurship,"Through this program, students can take interdisciplinary classes with students and faculty from area schools, can engage with exciting internship opportunities in area firms and institutions active in the intellectual property field, and can partner with students and faculty from other institutions in business plan competitions.",FALSE\r
+Arizona State University--Sandra Day O'Connor College of Law,Law and Sustainability,"Law and Sustainability at ASU Law is a hub of innovative research, thought leadership and collaborative problem-solving for environmental sustainability issues.",FALSE\r
+"Benjamin N. Cardozo School of Law, Yeshiva University",The Samuel & Ronnie Heyman Center on Corporate Governance,The Heyman Center is focused on corporate governance and securities regulation. They host events and courses on these topics.,TRUE\r
+Duke University School of Law,Bolch Judicial Institute,,FALSE\r
+Emory University School of Law,Barton Child Law & Policy Center,The Barton Center is focused on child law and policy. They host events and courses on these topics.,FALSE\r
+Fordham Law School,Center for Nonprofit and Community Development,The Center is focused on nonprofit and community development. They host events and courses on these topics.,FALSE\r
+George Washington University Law School,Law and Social Justice Project,The Project is focused on law and social justice. They host events and courses on these topics.,FALSE\r
+Harvard Law School,Center for Health Law and Policy Innovation,The Center for Health Law and Policy Innovation (CHLPI) is a clinical and academic program of Harvard Law School that advocates for legal, regulatory, and policy reforms to improve the health of vulnerable populations.,TRUE\r
+Harvard Law School,Program on Negotiation (PON),PON is focused on negotiation, mediation, and conflict resolution.,TRUE\r
+Mitchell Hamline School of Law,Center for Law and Business (CLAB),CLAB offers a Law and Business Certificate that is described as supporting a wide range of professional goals. The certificate is specifically noted as serving students interested in nonprofits and social enterprises, which directly aligns with the research focus.,TRUE\r
+University of North Carolina at Chapel Hill School of Law,Center on Poverty, Work & Opportunity,The Center is focused on poverty, work, and opportunity. They host events and courses on these topics.,FALSE\r
+Northwestern Pritzker School of Law,Donald Pritzker Entrepreneurship Law Center,The DPELC is one of the first comprehensive programs in the United States to provide intensive, hands-on training for students who want to be transactional lawyers or founders of start-up companies. The center explicitly includes social entrepreneurship as a focus area.,TRUE\r
+University of Pennsylvania Carey Law School,Wharton Legal Studies Department,Penn Law's collaboration with Wharton is a key strength. The Wharton Legal Studies Department hosts events and courses related to impact investing and social enterprise.,TRUE\r
+Santa Clara University School of Law,Center for Social Justice and Public Service,The Center is focused on social justice and public service. They host events and courses on these topics.,FALSE\r
+Stanford Law School,Center for Legal Informatics (CodeX),CodeX is focused on legal informatics and technology. They host events and courses on these topics.,FALSE\r
+University of Texas School of Law,Texas Law Center on Sustainable Development and Global Governance,,TRUE\r
+Vanderbilt Law School,Law and Business Program,The Law and Business Program hosts events and courses related to impact investing and social enterprise.,TRUE\r
+Vermont Law and Graduate School,Environmental Law Center,"The Environmental Law Center (ELC) oversees the most comprehensive graduate environmental law program in the country. Consistently ranked among the nation’s best by U.S. News & World Report, this environmental law program includes six legal clinics, seven centers and institutes, 60+ environmental law courses, and 76 environmental faculty.",FALSE\r
+Northwestern Pritzker School of Law,Donald Pritzker Entrepreneurship Law Center,"The DPELC, ""originally founded as the Small Business Opportunity Center more than 20 years ago, is one of the first comprehensive programs in the United States to provide intensive, hands-on training for students who want to be transactional lawyers or founders of start-up companies.""",FALSE\r
+New York University School of Law,Grunin Center for Law and Social Entrepreneurship,"""Launched in 2017, the Grunin Center for Law and Social Entrepreneurship is a global leader in the field of law and social entrepreneurship.""",FALSE\r
+Howard University School of Law,ESG and Law Institute,"The only evidence I've found of this Institute is a 2022 article, however, there is no webpage for this program on the Howard University website.",FALSE`
         };
 
-        const MAX_RETRIES = 3;
         const SHORT_LIST_COLUMNS_TO_DISPLAY = [
             'Institution', 
             'Institution Descriptions', 
@@ -234,54 +266,26 @@
         }
 
         /**
-         * Fetches and parses a single CSV file with retries.
-         * @param {string} filePath The path to the CSV file (now the 'uploaded:filename' path).
-         * @returns {Promise<Array<Object>>} Parsed data.
+         * Loads all data files by parsing the embedded strings.
          */
-        async function fetchFile(filePath) {
-            for (let i = 0; i < MAX_RETRIES; i++) {
-                try {
-                    console.log(`Fetching: ${filePath}`);
-                    // Fetch is automatically handled by the environment for 'uploaded:' paths
-                    const response = await fetch(filePath);
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status} for ${filePath}`);
-                    const text = await response.text();
-                    return parseCSV(text);
-                } catch (error) {
-                    console.error(`Attempt ${i + 1} failed for ${filePath}:`, error);
-                    if (i === MAX_RETRIES - 1) throw new Error(`Failed to load data for ${filePath} after ${MAX_RETRIES} attempts. Check file names in FILE_PATHS.`);
-                    await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i))); // Exponential backoff (1s, 2s, 4s)
-                }
-            }
-        }
-
-        /**
-         * Loads all data files.
-         */
-        async function loadAllData() {
+        function loadAllData() {
             try {
-                // Wait for both files to load concurrently
-                const [shortList, institutes] = await Promise.all([
-                    fetchFile(FILE_PATHS.shortList),
-                    fetchFile(FILE_PATHS.institutes)
-                ]);
+                // Parse the embedded raw strings
+                const shortList = parseCSV(RAW_CSV_DATA.shortList);
+                const institutes = parseCSV(RAW_CSV_DATA.institutes);
                 
                 // Filter out empty rows based on Institution name
                 allData.shortList = shortList.filter(row => row.Institution); 
                 allData.institutes = institutes.filter(row => row.Institution);
                 
-                // Show content and hide loading
-                document.getElementById('loading-state').classList.add('hidden');
-                document.getElementById('table-container').classList.remove('hidden');
-
                 // Initial render
                 renderTable();
 
             } catch (error) {
-                console.error('Fatal data loading error:', error);
-                document.getElementById('loading-state').innerHTML = `<p class="mt-4 text-red-600 font-sans font-medium">
-                    Error loading data. Check console for details. **Did you upload the correct files?**
-                </p><p class="mt-2 text-sm text-red-400">Error: ${error.message}</p>`;
+                console.error('Fatal data parsing error:', error);
+                document.getElementById('table-container').innerHTML = `<p class="mt-4 text-red-600 font-sans font-medium p-4 text-center">
+                    Error loading data. A parsing error occurred. Check console for details.
+                </p><p class="mt-2 text-sm text-red-400 p-4 text-center">Error: ${error.message}</p>`;
             }
         }
 
